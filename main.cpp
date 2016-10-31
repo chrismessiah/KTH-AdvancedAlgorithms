@@ -15,6 +15,8 @@
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 // global variables
@@ -83,15 +85,25 @@ int getRandomInt(int upperBound) {
 	return rand() % upperBound;
 }
 
+// REMEMBER 
+// SHUFFLE uses tour as SEED unless explicitly defined !!!!!!!!!!!
 vector<int> getRandomTour() {
 	vector<int> tour(::n);
-	int randInt;
-	int tempUpperBound = ::n;
-	for (int i = 0; i < ::n; ++i){
-		randInt = getRandomInt(tempUpperBound);
-		tour[i] = randInt;
-		tempUpperBound -= 1;
+	for (int i = 0; i < ::n; ++i) {
+		tour[i] = i;
 	}
+
+	srand(time(NULL)); // make random more random by having seed time-dependent
+	// random_shuffle(&tour[0], &tour[::n-1]); // does not support custom seeds unless overloaded, skip for now.
+
+	// manual shuffle
+	for (int i=0; i< ::n; i++) {
+        int r = rand() % ::n;
+        int temp = tour[i];
+        tour[i] = tour[r];
+        tour[r] = temp;
+    }
+
 	return tour;
 }
 
