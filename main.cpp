@@ -8,7 +8,6 @@
 #include <math.h>
 #include <vector>
 #include <iostream>
-#include <sstream>
 using namespace std;
 
 // global variables
@@ -17,15 +16,14 @@ vector<vector<float> > coordinates;
 
 // function declaractions
 void getInput();
-void getFirstLine();
-void resizeCoordinateVector();
 float dist(int a, int b);
 vector<int> greedyTour();
 void printForKattis(vector<int> output);
 
+
+
+
 int main() {
-	getFirstLine();
-	resizeCoordinateVector();
 	getInput();
 	vector<int> output = greedyTour();
 	printForKattis(output);
@@ -38,18 +36,16 @@ void printForKattis(vector<int> output) {
 	}
 }
 
-void getFirstLine() {
+void getInput() {
 	cin >> ::n;
-}
-
-void resizeCoordinateVector() {
+	
+	// set size of vector
 	::coordinates.resize(::n);
 	for (int i = 0; i < ::n; ++i) {
 		::coordinates[i].resize(2);
 	}
-} 
 
-void getInput() {
+	// get rest of input
 	for (int i = 0	; i < ::n; ++i) {
 		cin >> ::coordinates[i][0];
 		cin >> ::coordinates[i][1];
@@ -80,6 +76,5 @@ vector<int> greedyTour() {
 float dist(int a, int b) {
     float x = ::coordinates[a][0] - ::coordinates[b][0];
     float y = ::coordinates[a][1] - ::coordinates[b][1];
-
-    return  sqrt(pow(x,2) + pow(y,2));
+    return sqrt(pow(x,2) + pow(y,2));
 }
