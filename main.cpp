@@ -11,6 +11,10 @@
 using namespace std;
 // Imports
 
+// Declarations
+float dist(int a, int b)
+// Declarations
+
 int main() {
 	cout << "Hello!\n";
 	return 0;
@@ -35,4 +39,11 @@ vector<int> GreedyTour(int n) {
 		used[best] = true;
 	}
 	return tour;
+}
+
+float dist(int a, int b) {
+    float x = ::coordinates[a][0] - ::coordinates[b][0];
+    float y = ::coordinates[a][1] - ::coordinates[b][1];
+
+    return  sqrt(pow(x,2) + pow(y,2));
 }
