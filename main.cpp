@@ -20,20 +20,22 @@ void getInput();
 void getFirstLine();
 void resizeCoordinateVector();
 float dist(int a, int b);
+vector<int> greedyTour();
+void printForKattis(vector<int> output);
 
 int main() {
 	getFirstLine();
 	resizeCoordinateVector();
 	getInput();
-
-	// testing for globality
-	for (int i = 0; i < ::n; ++i) {
-		cout << ::coordinates[i][0];
-		cout << ::coordinates[i][1];
-	}
-	cout << ::n;
-
+	vector<int> output = greedyTour();
+	printForKattis(output);
 	return 0;
+}
+
+void printForKattis(vector<int> output) {
+	for (int i = 0; i < ::n; ++i) {
+		cout << output[i] << "\n";
+	}
 }
 
 void getFirstLine() {
@@ -65,17 +67,17 @@ void getInput() {
 	}
 }
 
-vector<int> GreedyTour(int n) {
+vector<int> greedyTour() {
 	// initalize some variables
-	vector<int> tour(n);
-	vector<bool> used(n);
+	vector<int> tour(::n);
+	vector<bool> used(::n);
 	used[0] = true;
 	int best = -1;
 
 	// run the actual algorithm
-	for (int i = 1; i < n; ++i) {
+	for (int i = 1; i < ::n; ++i) {
 		best = -1;
-		for (int j = 0; j < n; ++j) {
+		for (int j = 0; j < ::n; ++j) {
 			if (!used[j] && (best == -1 || dist(tour[i-1],j) < dist(tour[i-1],best) ) ) {
 				best = j;
 			}
