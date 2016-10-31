@@ -33,6 +33,7 @@ void printTour(vector<int> output);
 float calculateTourCost(vector<int> tour);
 vector<int> getRandomTour();
 void loadTestValues();
+vector<int> edgeSwap(int m, int n, vector<int> tour);
 
 
 
@@ -42,17 +43,22 @@ int main() {
 	getInput();
 
 	vector<int> tour = greedyTour();
-	vector<int> randomTour = getRandomTour();
+	cout << "before: \n";
+	printTour(tour);
+	cout << "\nafter: \n";
+	tour = edgeSwap(1,2,tour);
+	printTour(tour);
+
+	//vector<int> randomTour = getRandomTour();
 	//vector<int> tour = algorithm1();
 
 	if (!::kattis) {
 		cout << "\nCost for tour is: " << calculateTourCost(tour) << "\nTour path is: \n";
-		cout << "\nCost for randomTour is: " << calculateTourCost(randomTour) << "\nTour path is: \n";
 	}
 
-	printTour(tour);
-	cout << "\n";
-	printTour(randomTour);
+	// printTour(tour);
+	// cout << "\n";
+	// printTour(randomTour);
 	return 0;
 }
 
@@ -85,7 +91,28 @@ void getInput() {
 
 
 
+vector<int> edgeSwap(int m, int n, vector<int> tour) {
+	vector<int> newTour(::n);
 
+    // 1. take route[0] to route[m-1] and add them in order to new_route
+    for (int i = 0; i <= m - 1; ++i) {
+        newTour[i] = tour[i];
+    }
+     
+    // 2. take route[m] to route[n] and add them in reverse order to new_route
+    int dec = 0;
+    for (int i = m; i <= n; ++i) {
+        newTour[i] = tour[n - dec];
+        dec++;
+    }
+ 
+    // 3. take route[n+1] to end and add them in order to new_route
+    for (int i = n + 1; i < ::n; ++i) {
+        newTour[i] = tour[i];
+    }
+
+    return newTour;
+}
 
 void loadTestValues() {
 	::n = 10;
