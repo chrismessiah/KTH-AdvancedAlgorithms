@@ -12,6 +12,9 @@
 #include <math.h>
 #include <vector>
 #include <iostream>
+#include <stdio.h>      /* printf, scanf, puts, NULL */
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 using namespace std;
 
 // global variables
@@ -23,8 +26,11 @@ vector<vector<float> > coordinates;
 void getInput();
 float dist(int a, int b);
 vector<int> greedyTour();
+//vector<int> algorithm1();
 void printTour(vector<int> output);
 float calculateTourCost(vector<int> tour);
+vector<int> getRandomTour();
+
 
 
 
@@ -33,13 +39,17 @@ int main() {
 	getInput();
 
 	vector<int> tour = greedyTour();
+	vector<int> randomTour = getRandomTour();
 	//vector<int> tour = algorithm1();
 
 	if (!::kattis) {
 		cout << "\nCost for tour is: " << calculateTourCost(tour) << "\nTour path is: \n";
+		cout << "\nCost for randomTour is: " << calculateTourCost(randomTour) << "\nTour path is: \n";
 	}
 
 	printTour(tour);
+	cout << "\n";
+	printTour(randomTour);
 	return 0;
 }
 
@@ -65,6 +75,25 @@ void getInput() {
 	}
 }
 
+
+
+// return random int between 0 and upperBound
+int getRandomInt(int upperBound) {
+	srand (time(NULL));
+	return rand() % upperBound;
+}
+
+vector<int> getRandomTour() {
+	vector<int> tour(::n);
+	int randInt;
+	int tempUpperBound = ::n;
+	for (int i = 0; i < ::n; ++i){
+		randInt = getRandomInt(tempUpperBound);
+		tour[i] = randInt;
+		tempUpperBound -= 1;
+	}
+	return tour;
+}
 
 float calculateTourCost(vector<int> tour) {
 	float cost = 0.0;
