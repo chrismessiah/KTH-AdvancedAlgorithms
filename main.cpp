@@ -50,16 +50,9 @@ void resizeCoordinateVector() {
 } 
 
 void getInput() {
-
 	for (int i = 0	; i < ::n; ++i) {
-		// float a;
-		// float b;
-
 		cin >> ::coordinates[i][0];
 		cin >> ::coordinates[i][1];
-
-		// ::coordinates[i][0] = atof(a);
-		// ::coordinates[i][1] = atof(tokens[1].c_str());
 	}
 }
 
