@@ -28,7 +28,7 @@ vector<vector<float> > coordinates;
 void getInput();
 float dist(int a, int b);
 vector<int> greedyTour();
-vector<int> algorithm1();
+vector<int> twoOptTour();
 void printTour(vector<int> output);
 float calculateTourCost(vector<int> tour);
 vector<int> getRandomTour();
@@ -43,11 +43,11 @@ int main() {
 	getInput();
 
 	vector<int> tour = greedyTour();
-	vector<int> tour2 = algorithm1();
+	vector<int> tour2 = twoOptTour();
 	printTour(tour);
 
 	//vector<int> randomTour = getRandomTour();
-	//vector<int> tour = algorithm1();
+	//vector<int> tour = twoOptTour();
 
 	if (!::kattis) {
 		cout << "\nCost for tour 1 is: " << calculateTourCost(tour) << "\n";
@@ -90,7 +90,7 @@ void getInput() {
 
 
 
-vector<int> algorithm1() {
+vector<int> twoOptTour() {
 	int thresh = 20; // The theshhold of how much the algorithm will search
 
 	vector<int> tour = getRandomTour();
