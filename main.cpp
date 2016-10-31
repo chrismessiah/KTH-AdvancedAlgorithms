@@ -91,27 +91,27 @@ void getInput() {
 
 
 vector<int> algorithm1() {
-	int thresh = 20;
+	int thresh = 20; // The theshhold of how much the algorithm will search
 
 	vector<int> tour = getRandomTour();
  	double tourCost = calculateTourCost(tour);
- 	double best_distance = tourCost;
- 	double new_distance;
- 	vector<int> new_tour;
+ 	double bestDistance = tourCost;
+ 	double newDistance;
+ 	vector<int> newTour;
     
     int improve = 0;
     while (improve < thresh) {
 
         for (int i = 0; i < ::n-1; i++) {
             for (int k = i+1; k < ::n; k++) {
-                new_tour = nodeSwap(i, k, tour);
-                new_distance = calculateTourCost(new_tour);
+                newTour = nodeSwap(i, k, tour);
+                newDistance = calculateTourCost(newTour);
  
  				// Improvement found so reset
-                if ( new_distance < best_distance ) {
+                if ( newDistance < bestDistance ) {
                     improve = 0;
-                    tour = new_tour;
-                    best_distance = new_distance;
+                    tour = newTour;
+                    bestDistance = newDistance;
                 }
             }
         }
