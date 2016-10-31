@@ -91,6 +91,7 @@ void getInput() {
 
 
 
+// Swaps edges at index m and n in tour vector
 vector<int> edgeSwap(int m, int n, vector<int> tour) {
 	vector<int> newTour(::n);
 
