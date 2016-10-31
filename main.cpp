@@ -1,6 +1,10 @@
 // Travelling Salesperson 2D
 // https://kth.kattis.com/problems/tsp
 
+// Authors 
+// Christian Abdelmassih
+// Marcus Wallberg
+
 // compile with: g++ filename.cpp
 // Run with: ./a.out
 
@@ -12,25 +16,34 @@ using namespace std;
 
 // global variables
 int n;
+bool kattis = false;
 vector<vector<float> > coordinates;
 
 // function declaractions
 void getInput();
 float dist(int a, int b);
 vector<int> greedyTour();
-void printForKattis(vector<int> output);
+void printTour(vector<int> output);
+float calculateTourCost(vector<int> tour);
 
 
 
 
 int main() {
 	getInput();
-	vector<int> output = greedyTour();
-	printForKattis(output);
+
+	vector<int> tour = greedyTour();
+	//vector<int> tour = algorithm1();
+
+	if (!::kattis) {
+		cout << "\nCost for tour is: " << calculateTourCost(tour) << "\nTour path is: \n";
+	}
+
+	printTour(tour);
 	return 0;
 }
 
-void printForKattis(vector<int> output) {
+void printTour(vector<int> output) {
 	for (int i = 0; i < ::n; ++i) {
 		cout << output[i] << "\n";
 	}
@@ -50,6 +63,16 @@ void getInput() {
 		cin >> ::coordinates[i][0];
 		cin >> ::coordinates[i][1];
 	}
+}
+
+
+float calculateTourCost(vector<int> tour) {
+	float cost = 0.0;
+	for (int i = 1; i < ::n; ++i) {
+		cost += dist(tour[i-1], tour[i]);
+	}
+	cost += dist(tour[::n-1], tour[0]);
+	return cost;
 }
 
 vector<int> greedyTour() {
