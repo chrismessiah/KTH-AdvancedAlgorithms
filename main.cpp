@@ -28,7 +28,7 @@ vector<vector<float> > coordinates;
 void getInput();
 float dist(int a, int b);
 vector<int> greedyTour();
-//vector<int> algorithm1();
+vector<int> algorithm1();
 void printTour(vector<int> output);
 float calculateTourCost(vector<int> tour);
 vector<int> getRandomTour();
@@ -43,22 +43,21 @@ int main() {
 	getInput();
 
 	vector<int> tour = greedyTour();
-	cout << "before: \n";
-	printTour(tour);
-	cout << "\nafter: \n";
-	tour = nodeSwap(1,2,tour);
+	vector<int> tour2 = algorithm1();
 	printTour(tour);
 
 	//vector<int> randomTour = getRandomTour();
 	//vector<int> tour = algorithm1();
 
 	if (!::kattis) {
-		cout << "\nCost for tour is: " << calculateTourCost(tour) << "\nTour path is: \n";
+		cout << "\nCost for tour 1 is: " << calculateTourCost(tour) << "\n";
+		cout << "\nCost for tour 2 is: " << calculateTourCost(tour2) << "\n";
 	}
 
-	// printTour(tour);
-	// cout << "\n";
-	// printTour(randomTour);
+	cout << "\nTour 1: \n";
+	printTour(tour);
+	cout << "\nTour 2: \n";
+	printTour(tour2);
 	return 0;
 }
 
@@ -90,6 +89,36 @@ void getInput() {
 }
 
 
+
+vector<int> algorithm1() {
+	int thresh = 20;
+
+	vector<int> tour = getRandomTour();
+ 	double tourCost = calculateTourCost(tour);
+ 	double best_distance = tourCost;
+ 	double new_distance;
+ 	vector<int> new_tour;
+    
+    int improve = 0;
+    while (improve < thresh) {
+
+        for (int i = 0; i < ::n-1; i++) {
+            for (int k = i+1; k < ::n; k++) {
+                new_tour = nodeSwap(i, k, tour);
+                new_distance = calculateTourCost(new_tour);
+ 
+ 				// Improvement found so reset
+                if ( new_distance < best_distance ) {
+                    improve = 0;
+                    tour = new_tour;
+                    best_distance = new_distance;
+                }
+            }
+        }
+        improve ++;
+    }
+    return tour;
+}
 
 // Swaps nodes at index m and n in tour vector
 vector<int> nodeSwap(int m, int n, vector<int> tour) {
