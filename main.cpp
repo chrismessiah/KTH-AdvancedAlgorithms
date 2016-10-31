@@ -39,11 +39,7 @@ void printForKattis(vector<int> output) {
 }
 
 void getFirstLine() {
-	string input = 	"";
-	
-	getline(cin, input);
-	stringstream myStream(input);
-	myStream >> ::n;
+	cin >> ::n;
 }
 
 void resizeCoordinateVector() {
@@ -54,16 +50,16 @@ void resizeCoordinateVector() {
 } 
 
 void getInput() {
-	string input = 	"";
 
 	for (int i = 0	; i < ::n; ++i) {
-		getline(cin, input);
-    	istringstream buf(input);
-    	istream_iterator<string> beg(buf), end;
-    	vector<string> tokens(beg, end);
+		// float a;
+		// float b;
 
-		::coordinates[i][0] = atof(tokens[0].c_str());
-		::coordinates[i][1] = atof(tokens[1].c_str());
+		cin >> ::coordinates[i][0];
+		cin >> ::coordinates[i][1];
+
+		// ::coordinates[i][0] = atof(a);
+		// ::coordinates[i][1] = atof(tokens[1].c_str());
 	}
 }
 
