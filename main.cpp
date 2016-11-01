@@ -21,7 +21,7 @@ using namespace std;
 
 // global variables
 int n;
-bool kattis = false;
+bool kattis = true;
 vector<vector<float> > coordinates;
 
 // function declaractions
@@ -42,10 +42,10 @@ float calculateNodeRelativeCost(int m, vector<int> tour);
 int main() {
 	getInput();
 
-	vector<int> tour = greedyTour();
-	vector<int> tour2 = twoOptTour();
-
 	if (!::kattis) {
+		vector<int> tour = greedyTour();
+		vector<int> tour2 = twoOptTour();
+
 		cout << "\nCost for tour 1 is: " << calculateTotalTourCost(tour) << "\n";
 		cout << "\nCost for tour 2 is: " << calculateTotalTourCost(tour2) << "\n";
 
@@ -54,6 +54,7 @@ int main() {
 		cout << "\nTour 2: \n";
 		printTour(tour2);
 	} else {
+		vector<int> tour = twoOptTour();
 		printTour(tour);
 	}
 	return 0;
@@ -89,7 +90,7 @@ void getInput() {
 
 
 vector<int> twoOptTour() {
-	int thresh = 20; // The theshhold of how much the algorithm will search
+	int thresh = 30; // The theshhold of how much the algorithm will search
 
 	vector<int> tour = getRandomTour();
 	vector<int> tempTour;
