@@ -48,12 +48,14 @@ int main() {
 	if (!::kattis) {
 		cout << "\nCost for tour 1 is: " << calculateTotalTourCost(tour) << "\n";
 		cout << "\nCost for tour 2 is: " << calculateTotalTourCost(tour2) << "\n";
-	}
 
-	cout << "\nTour 1: \n";
-	printTour(tour);
-	cout << "\nTour 2: \n";
-	printTour(tour2);
+		cout << "\nTour 1: \n";
+		printTour(tour);
+		cout << "\nTour 2: \n";
+		printTour(tour2);
+	} else {
+		printTour(tour);
+	}
 	return 0;
 }
 
@@ -94,23 +96,23 @@ vector<int> twoOptTour() {
  	double bestDistance = calculateTotalTourCost(tour);
  	double swapResultCost;
     
-    int improve = 0;
-    while (improve < thresh) {
+    int count = 0;
+    while (count < thresh) {
 
-        for (int i = 0; i < ::n-1; i++) {
-            for (int k = i+1; k < ::n; k++) {
-            	tempTour = nodeSwap(i, k, tour);
-                swapResultCost = calculateMultipleNodeCost(i,k,tour);
-                swapResultCost -= calculateMultipleNodeCost(i,k,tempTour);
+        for (int i = 0; i < ::n-1; i++) { // loop through all nodes except last 
+            for (int j = i+1; j < ::n; j++) { // loop through all nodes after node tour[i]
+            	tempTour = nodeSwap(i, j, tour);
+                swapResultCost = calculateMultipleNodeCost(i,j,tour);
+                swapResultCost -= calculateMultipleNodeCost(i,j,tempTour);
  
                 if (swapResultCost > 0) { // found a shorter path!
-                    improve = 0;
+                    count = 0;
                     tour = tempTour;
                     bestDistance -= swapResultCost;
                 }
             }
         }
-        improve ++;
+        count++;
     }
     return tour;
 }
