@@ -5,6 +5,13 @@
 // Christian Abdelmassih
 // Marcus Wallberg
 
+
+// DOCUMENTATION
+// Possible algorithms to use
+// 		1. Nearest neighbour/Greedy
+// 		2. Clarke-Wright heuristic
+// 		3. K-opt (2 in our case)
+
 // compile with: g++ *.cpp
 // Run with: ./a.out
 
@@ -28,19 +35,20 @@ vector<int> tour;
 
 // function declaractions
 void getInput();
-double dist(int a, int b);
+int dist(int a, int b);
 void greedyTour();
 void twoOptTour();
 void printTour();
-double calculateTotalTourCost();
+int calculateTotalTourCost();
 void getRandomTour();
 void loadTestValues();
 void nodeSwap(int m, int n);
-double calculateMultipleNodeCost(int m, int n);
-double calculateNodeRelativeCost(int m);
+int calculateMultipleNodeCost(int m, int n);
+int calculateNodeRelativeCost(int m);
 double getRunTime();
 void printRunTime();
 void resetTimer();
+void twoOptTourTimer();
 
 int main() {
 	resetTimer();
@@ -62,7 +70,8 @@ int main() {
 
 	} else {
 		twoOptTour();
-		//vector<int> tour = greedyTour();
+		//twoOptTourTimer();
+		//greedyTour();
 		printTour();
 	}
 	return 0;
@@ -110,37 +119,37 @@ void getInput() {
 
 
 // experimetal with time
-// vector<int> twoOptTour() {
-// 	vector<int> tour = getRandomTour();
-// 	vector<int> tempTour;
-//  	double bestDistance = calculateTotalTourCost(tour);
-//  	double swapResultCost;
-//  	double time = getRunTime();
+void twoOptTourTimer() {
+	//getRandomTour();
+	greedyTour();
+ 	double bestDistance = calculateTotalTourCost();
+ 	double swapResultCost;
     
-//     while (true) {
-//         for (int i = 0; i < ::n-1; i++) { // loop through all nodes except last 
-//             for (int j = i+1; j < ::n; j++) { // loop through all nodes after node tour[i]
-//             	tempTour = nodeSwap(i, j, tour);
-//                 swapResultCost = calculateMultipleNodeCost(i,j,tour);
-//                 swapResultCost -= calculateMultipleNodeCost(i,j,tempTour);
- 
-//                 if (swapResultCost > 0) { // found a shorter path!
-//                     tour = tempTour;
-//                     bestDistance -= swapResultCost;
-//                 }
-//                 time = getRunTime();
-//                 if (time > 0.3) {return tour;}
-//             }
-//         }
-//     }
-//     return tour;
-// }
+    while (true) {
+        for (int i = 0; i < ::n-1; i++) { // loop through all nodes except last 
+            for (int j = i+1; j < ::n; j++) { // loop through all nodes after node tour[i]
+                swapResultCost = calculateMultipleNodeCost(i,j);
+                nodeSwap(i, j);
+                swapResultCost -= calculateMultipleNodeCost(i,j);
+ 				nodeSwap(i, j);
+
+                if (swapResultCost > 0) { // found a shorter path!
+                    nodeSwap(i, j);
+                    bestDistance -= swapResultCost;
+                }
+                if (getRunTime() > 0.037) {return;} // 2/51=0.0392156863
+            }
+        }
+    }
+}
 
 
+// performs all possible swaps!
 void twoOptTour() {
-	int thresh = 10;
+	int thresh = 30;
 
-	getRandomTour();
+	//getRandomTour();
+	greedyTour();
  	double bestDistance = calculateTotalTourCost();
  	double swapResultCost;
     
@@ -153,11 +162,12 @@ void twoOptTour() {
                 nodeSwap(i, j);
                 swapResultCost -= calculateMultipleNodeCost(i,j);
  				nodeSwap(i, j);
- 				
+
                 if (swapResultCost > 0) { // found a shorter path!
                     count = 0;
                     nodeSwap(i, j);
                     bestDistance -= swapResultCost;
+                    //break; // some 2-Opt algorithms use break here!
                 }
             }
         }
@@ -232,8 +242,8 @@ void getRandomTour() {
 }
 
 // calculates the cost by going through the entire tour
-double calculateTotalTourCost() {
-	double cost = 0.0;
+int calculateTotalTourCost() {
+	int cost = 0;
 	for (int i = 1; i < ::n; ++i) {
 		cost += dist(::tour[i-1], ::tour[i]);
 	}
@@ -242,16 +252,16 @@ double calculateTotalTourCost() {
 }
 
 // runs calculateNodeRelativeCost for two nodes
-double calculateMultipleNodeCost(int m, int n) {
-	double cost = 0.0;
+int calculateMultipleNodeCost(int m, int n) {
+	int cost = 0;
 	cost += calculateNodeRelativeCost(m);
 	cost += calculateNodeRelativeCost(n);
 	return cost;
 }
 
 // calculates cost for edges going into and out of node tour[m]
-double calculateNodeRelativeCost(int m) {
-	double cost = 0.0;
+int calculateNodeRelativeCost(int m) {
+	int cost = 0;
 	int before = m-1;
 	int after = m+1;
 
@@ -286,8 +296,8 @@ void greedyTour() {
 	}
 }
 
-double dist(int a, int b) {
+int dist(int a, int b) {
     float x = ::coordinates[a][0] - ::coordinates[b][0];
     float y = ::coordinates[a][1] - ::coordinates[b][1];
-    return sqrt(pow(x,2) + pow(y,2));
+    return round(sqrt(pow(x,2) + pow(y,2)));
 }
