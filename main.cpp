@@ -54,7 +54,8 @@ int main() {
 		cout << "\nTour 2: \n";
 		printTour(tour2);
 	} else {
-		vector<int> tour = twoOptTour();
+		//vector<int> tour = twoOptTour();
+		vector<int> tour = greedyTour();
 		printTour(tour);
 	}
 	return 0;
@@ -208,12 +209,17 @@ float calculateMultipleNodeCost(int m, int n, vector<int> tour) {
 // calculates cost for edges going into and out of node tour[m]
 float calculateNodeRelativeCost(int m, vector<int> tour) {
 	float cost = 0.0;
-	try {
-		cost += dist(tour[m-1], tour[m]);
-	} catch(...) {}
-	try {
-		cost += dist(tour[m], tour[m+1]);
-	} catch(...) {}
+	int before = m-1;
+	int after = m+1;
+
+	if (m == 0) {
+		before = ::n-1;
+	} else if (m == ::n-1) {
+		after = 0;
+	}
+
+	cost += dist(tour[before], tour[m]);
+	cost += dist(tour[m], tour[after]);
 	return cost;
 }
 
