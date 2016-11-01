@@ -29,7 +29,7 @@ using namespace std;
 // global variables
 int n;
 bool kattis = false;
-vector<vector<double> > coordinates;
+vector<vector<float> > coordinates;
 clock_t start;
 vector<int> tour;
 
@@ -45,7 +45,7 @@ void loadTestValues();
 void nodeSwap(int m, int n);
 int calculateMultipleNodeCost(int m, int n);
 int calculateNodeRelativeCost(int m);
-double getRunTime();
+float getRunTime();
 void printRunTime();
 void resetTimer();
 void twoOptTourTimer();
@@ -86,8 +86,8 @@ void printRunTime() {
 }
 
 // returns time in seconds
-double getRunTime() {
-	return(( clock() - ::start ) / (double) CLOCKS_PER_SEC);
+float getRunTime() {
+	return(( clock() - ::start ) / (float) CLOCKS_PER_SEC);
 }
 
 void printTour() {
@@ -122,8 +122,8 @@ void getInput() {
 void twoOptTourTimer() {
 	//getRandomTour();
 	greedyTour();
- 	double bestDistance = calculateTotalTourCost();
- 	double swapResultCost;
+ 	int bestDistance = calculateTotalTourCost();
+ 	int swapResultCost;
     
     while (true) {
         for (int i = 0; i < ::n-1; i++) { // loop through all nodes except last 
@@ -148,10 +148,12 @@ void twoOptTourTimer() {
 void twoOptTour() {
 	int thresh = 30;
 
+	if (!::kattis) {resetTimer(); cout << "\nGetting inital tour:\n";}
 	//getRandomTour();
 	greedyTour();
- 	double bestDistance = calculateTotalTourCost();
- 	double swapResultCost;
+	if (!::kattis) {printRunTime(); cout << "\nRunning algorithm:\n"; resetTimer();}
+ 	int bestDistance = calculateTotalTourCost();
+ 	int swapResultCost;
     
     int count = 0;
     while (count < thresh) {
