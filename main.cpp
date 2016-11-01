@@ -22,21 +22,22 @@ using namespace std;
 // global variables
 int n;
 bool kattis = false;
-vector<vector<float> > coordinates;
+vector<vector<double> > coordinates;
 clock_t start;
+vector<int> tour;
 
 // function declaractions
 void getInput();
-float dist(int a, int b);
-vector<int> greedyTour();
-vector<int> twoOptTour();
-void printTour(vector<int> output);
-float calculateTotalTourCost(vector<int> tour);
-vector<int> getRandomTour();
+double dist(int a, int b);
+void greedyTour();
+void twoOptTour();
+void printTour();
+double calculateTotalTourCost();
+void getRandomTour();
 void loadTestValues();
-vector<int> nodeSwap(int m, int n, vector<int> tour);
-float calculateMultipleNodeCost(int m, int n, vector<int> tour);
-float calculateNodeRelativeCost(int m, vector<int> tour);
+void nodeSwap(int m, int n);
+double calculateMultipleNodeCost(int m, int n);
+double calculateNodeRelativeCost(int m);
 double getRunTime();
 void printRunTime();
 void resetTimer();
@@ -46,22 +47,23 @@ int main() {
 	getInput();
 
 	if (!::kattis) {
-		vector<int> tour = greedyTour();
-		printRunTime();
-		vector<int> tour2 = twoOptTour();
-		printRunTime();
-
-		cout << "\nCost for tour 1 is: " << calculateTotalTourCost(tour) << "\n";
-		cout << "\nCost for tour 2 is: " << calculateTotalTourCost(tour2) << "\n";
-
+		
 		cout << "\nTour 1: \n";
-		printTour(tour);
+		greedyTour();
+		printRunTime();
+		cout << "\nCost for tour 1 is: " << calculateTotalTourCost() << "\n";
+		printTour();
+
 		cout << "\nTour 2: \n";
-		printTour(tour2);
+		twoOptTour();
+		printRunTime();
+		cout << "\nCost for tour 2 is: " << calculateTotalTourCost() << "\n";
+		printTour();
+
 	} else {
-		vector<int> tour = twoOptTour();
+		twoOptTour();
 		//vector<int> tour = greedyTour();
-		printTour(tour);
+		printTour();
 	}
 	return 0;
 }
@@ -74,13 +76,14 @@ void printRunTime() {
 	cout << "Current runtime: " << getRunTime() << "\n";
 }
 
+// returns time in seconds
 double getRunTime() {
 	return(( clock() - ::start ) / (double) CLOCKS_PER_SEC);
 }
 
-void printTour(vector<int> output) {
+void printTour() {
 	for (int i = 0; i < ::n; ++i) {
-		cout << output[i] << "\n";
+		cout << ::tour[i] << "\n";
 	}
 }
 
@@ -106,15 +109,39 @@ void getInput() {
 }
 
 
+// experimetal with time
+// vector<int> twoOptTour() {
+// 	vector<int> tour = getRandomTour();
+// 	vector<int> tempTour;
+//  	double bestDistance = calculateTotalTourCost(tour);
+//  	double swapResultCost;
+//  	double time = getRunTime();
+    
+//     while (true) {
+//         for (int i = 0; i < ::n-1; i++) { // loop through all nodes except last 
+//             for (int j = i+1; j < ::n; j++) { // loop through all nodes after node tour[i]
+//             	tempTour = nodeSwap(i, j, tour);
+//                 swapResultCost = calculateMultipleNodeCost(i,j,tour);
+//                 swapResultCost -= calculateMultipleNodeCost(i,j,tempTour);
+ 
+//                 if (swapResultCost > 0) { // found a shorter path!
+//                     tour = tempTour;
+//                     bestDistance -= swapResultCost;
+//                 }
+//                 time = getRunTime();
+//                 if (time > 0.3) {return tour;}
+//             }
+//         }
+//     }
+//     return tour;
+// }
 
-vector<int> twoOptTour() {
-	// The theshhold of how much the algorithm will search,
-	// we may want to use time as upper bound instead
+
+void twoOptTour() {
 	int thresh = 10;
 
-	vector<int> tour = getRandomTour();
-	vector<int> tempTour;
- 	double bestDistance = calculateTotalTourCost(tour);
+	getRandomTour();
+ 	double bestDistance = calculateTotalTourCost();
  	double swapResultCost;
     
     int count = 0;
@@ -122,28 +149,27 @@ vector<int> twoOptTour() {
 
         for (int i = 0; i < ::n-1; i++) { // loop through all nodes except last 
             for (int j = i+1; j < ::n; j++) { // loop through all nodes after node tour[i]
-            	tempTour = nodeSwap(i, j, tour);
-                swapResultCost = calculateMultipleNodeCost(i,j,tour);
-                swapResultCost -= calculateMultipleNodeCost(i,j,tempTour);
- 
+                swapResultCost = calculateMultipleNodeCost(i,j);
+                nodeSwap(i, j);
+                swapResultCost -= calculateMultipleNodeCost(i,j);
+ 				nodeSwap(i, j);
+ 				
                 if (swapResultCost > 0) { // found a shorter path!
                     count = 0;
-                    tour = tempTour;
+                    nodeSwap(i, j);
                     bestDistance -= swapResultCost;
                 }
             }
         }
         count++;
     }
-    return tour;
 }
 
 // Swaps nodes at index m and n in tour vector
-vector<int> nodeSwap(int m, int n, vector<int> tour) {
-	int temp = tour[m];
-	tour[m] = tour[n];
-	tour[n] = temp;
-	return tour;
+void nodeSwap(int m, int n) {
+	int temp = ::tour[m];
+	::tour[m] = ::tour[n];
+	::tour[n] = temp;
 }
 
 void loadTestValues() {
@@ -187,10 +213,10 @@ void loadTestValues() {
 
 // REMEMBER 
 // SHUFFLE uses tour as SEED unless explicitly defined !!!!!!!!!!!
-vector<int> getRandomTour() {
-	vector<int> tour(::n);
+void getRandomTour() {
+	::tour.resize(::n);
 	for (int i = 0; i < ::n; ++i) {
-		tour[i] = i;
+		::tour[i] = i;
 	}
 
 	srand(time(NULL)); // make random more random by having seed time-dependent
@@ -199,35 +225,33 @@ vector<int> getRandomTour() {
 	// manual shuffle
 	for (int i=0; i< ::n; i++) {
         int r = rand() % ::n;
-        int temp = tour[i];
-        tour[i] = tour[r];
-        tour[r] = temp;
+        int temp = ::tour[i];
+        ::tour[i] = ::tour[r];
+        ::tour[r] = temp;
     }
-
-	return tour;
 }
 
 // calculates the cost by going through the entire tour
-float calculateTotalTourCost(vector<int> tour) {
-	float cost = 0.0;
+double calculateTotalTourCost() {
+	double cost = 0.0;
 	for (int i = 1; i < ::n; ++i) {
-		cost += dist(tour[i-1], tour[i]);
+		cost += dist(::tour[i-1], ::tour[i]);
 	}
-	cost += dist(tour[::n-1], tour[0]);
+	cost += dist(::tour[::n-1], ::tour[0]);
 	return cost;
 }
 
 // runs calculateNodeRelativeCost for two nodes
-float calculateMultipleNodeCost(int m, int n, vector<int> tour) {
-	float cost = 0.0;
-	cost += calculateNodeRelativeCost(m, tour);
-	cost += calculateNodeRelativeCost(n, tour);
+double calculateMultipleNodeCost(int m, int n) {
+	double cost = 0.0;
+	cost += calculateNodeRelativeCost(m);
+	cost += calculateNodeRelativeCost(n);
 	return cost;
 }
 
 // calculates cost for edges going into and out of node tour[m]
-float calculateNodeRelativeCost(int m, vector<int> tour) {
-	float cost = 0.0;
+double calculateNodeRelativeCost(int m) {
+	double cost = 0.0;
 	int before = m-1;
 	int after = m+1;
 
@@ -237,14 +261,14 @@ float calculateNodeRelativeCost(int m, vector<int> tour) {
 		after = 0;
 	}
 
-	cost += dist(tour[before], tour[m]);
-	cost += dist(tour[m], tour[after]);
+	cost += dist(::tour[before], ::tour[m]);
+	cost += dist(::tour[m], ::tour[after]);
 	return cost;
 }
 
-vector<int> greedyTour() {
+void greedyTour() {
 	// initalize some variables
-	vector<int> tour(::n);
+	::tour.resize(::n);
 	vector<bool> used(::n);
 	used[0] = true;
 	int best = -1;
@@ -253,17 +277,16 @@ vector<int> greedyTour() {
 	for (int i = 1; i < ::n; ++i) {
 		best = -1;
 		for (int j = 0; j < ::n; ++j) {
-			if (!used[j] && (best == -1 || dist(tour[i-1],j) < dist(tour[i-1],best) ) ) {
+			if (!used[j] && (best == -1 || dist(::tour[i-1],j) < dist(::tour[i-1],best) ) ) {
 				best = j;
 			}
 		}
-		tour[i] = best;
+		::tour[i] = best;
 		used[best] = true;
 	}
-	return tour;
 }
 
-float dist(int a, int b) {
+double dist(int a, int b) {
     float x = ::coordinates[a][0] - ::coordinates[b][0];
     float y = ::coordinates[a][1] - ::coordinates[b][1];
     return sqrt(pow(x,2) + pow(y,2));
