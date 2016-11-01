@@ -21,8 +21,9 @@ using namespace std;
 
 // global variables
 int n;
-bool kattis = true;
+bool kattis = false;
 vector<vector<float> > coordinates;
+clock_t start;
 
 // function declaractions
 void getInput();
@@ -36,15 +37,19 @@ void loadTestValues();
 vector<int> nodeSwap(int m, int n, vector<int> tour);
 float calculateMultipleNodeCost(int m, int n, vector<int> tour);
 float calculateNodeRelativeCost(int m, vector<int> tour);
-
-
+double getRunTime();
+void printRunTime();
+void resetTimer();
 
 int main() {
+	resetTimer();
 	getInput();
 
 	if (!::kattis) {
 		vector<int> tour = greedyTour();
+		printRunTime();
 		vector<int> tour2 = twoOptTour();
+		printRunTime();
 
 		cout << "\nCost for tour 1 is: " << calculateTotalTourCost(tour) << "\n";
 		cout << "\nCost for tour 2 is: " << calculateTotalTourCost(tour2) << "\n";
@@ -54,11 +59,23 @@ int main() {
 		cout << "\nTour 2: \n";
 		printTour(tour2);
 	} else {
-		//vector<int> tour = twoOptTour();
-		vector<int> tour = greedyTour();
+		vector<int> tour = twoOptTour();
+		//vector<int> tour = greedyTour();
 		printTour(tour);
 	}
 	return 0;
+}
+
+void resetTimer() {
+	::start = clock();
+}
+
+void printRunTime() {
+	cout << "Current runtime: " << getRunTime() << "\n";
+}
+
+double getRunTime() {
+	return(( clock() - ::start ) / (double) CLOCKS_PER_SEC);
 }
 
 void printTour(vector<int> output) {
@@ -91,7 +108,9 @@ void getInput() {
 
 
 vector<int> twoOptTour() {
-	int thresh = 30; // The theshhold of how much the algorithm will search
+	// The theshhold of how much the algorithm will search,
+	// we may want to use time as upper bound instead
+	int thresh = 10;
 
 	vector<int> tour = getRandomTour();
 	vector<int> tempTour;
