@@ -5,18 +5,13 @@
 // Christian Abdelmassih
 // Marcus Wallberg
 
-
-// DOCUMENTATION
-// Possible algorithms to use
-//      1. Nearest neighbour/Greedy
-//      2. Clarke-Wright heuristic
-//      3. K-opt (2 in our case)
-
-// compile with: g++ *.cpp
+// compile with: g++ *.cpp -lgmp
 // Run with: ./a.out
 
 // Imports
 #include <gmp.h>
+#include <gmpxx.h>
+
 #include <vector>
 #include <iostream>
 #include <stdio.h>      /* printf, scanf, puts, NULL */
@@ -51,18 +46,27 @@ void get_input() {
 		return;
 	}
 
-  	MP_INT integ;
-  	string integ_str;
-  	mpz_init (&integ);
-  	mpz_set_str (&integ, "314159265358979323846264399999999999999", ::base);
-	mpz_get_str (&integ_str, ::base, &integ);
-	cout << integ_str << "\n";
 
-  	MP_INT integ2;
-  	string integ2_str;
-  	mpz_init_set_str (&integ2, "3141592653589793238462643383279502884", ::base);
-  	mpz_get_str (&integ_str2, ::base, &integ2);
-  	cout << integ_str2 << "\n";
+
+  	mpz_class a, b, c;
+  	a = 314159265358979323846264399999999999999;
+  	b = 3141592653589793238462643383279502884;
+  	c = a+b;
+	cout << "Sum is: " << c << "\n";
+  	
+
+
+ // 	string integ_str;
+ // 	mpz_init (&integ);
+ // 	mpz_set_str (&integ, "314159265358979323846264399999999999999", ::base);
+//	mpz_get_str (&integ_str, ::base, &integ);
+//	cout << integ_str << "\n";
+
+//  	MP_INT integ2;
+//  	char integ2_str [39];
+//  	mpz_init_set_str (&integ2, "3141592653589793238462643383279502884", ::base);
+//  	mpz_get_str (&integ_str2, ::base, &integ2);
+//  	cout << integ_str2 << "\n";
 
   	mpz_clear (&integ);
   	mpz_clear (&integ2);
