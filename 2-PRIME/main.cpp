@@ -25,7 +25,7 @@ int base = 10;
 
 // function declaractions
 void get_input();
-void load_test_values();
+//void load_test_values();
 
 int main() {
 	get_input();
@@ -41,16 +41,16 @@ int main() {
 }
 
 void get_input() {
-	if (!::kattis) {
-		load_test_values();
-		return;
-	}
+	//if (!::kattis) {
+	//	load_test_values();
+	//	return;
+	//}
 
 
 
   	mpz_class a, b, c;
-  	a = 314159265358979323846264399999999999999;
-  	b = 3141592653589793238462643383279502884;
+  	a = "314159265358979323846264399999999999999";
+  	b = "314159265358979323846264338327950288400";
   	c = a+b;
 	cout << "Sum is: " << c << "\n";
   	
@@ -68,8 +68,8 @@ void get_input() {
 //  	mpz_get_str (&integ_str2, ::base, &integ2);
 //  	cout << integ_str2 << "\n";
 
-  	mpz_clear (&integ);
-  	mpz_clear (&integ2);
+//  	mpz_clear (&integ);
+//  	mpz_clear (&integ2);
 
 	//mpz_add(c, a, b);
 	//cin >> ::n;
