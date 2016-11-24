@@ -22,57 +22,49 @@ using namespace std;
 int n;
 bool kattis = false;
 int base = 10;
+vector<string> input;
 
 // function declaractions
 void get_input();
-//void load_test_values();
+void load_test_values();
 
 int main() {
 	get_input();
 
+	// loop over all values, good for later!
+	cout << "printing input values" << "\n";
+	for(vector<string>::iterator it = ::input.begin(); it != ::input.end(); ++it) {
+    	cout << *it << "\n";
+	}
 
-	// if (!::kattis) {
-
-	// } else {
-
-	// }
+	// how additions work, also good for later!
+  	mpz_class a, b, c;
+  	a = "314159265358979323846264399999999999999";
+  	b = "314159265358979323846264338327950288400";
+  	c = a+b; // in this case + is not ordinary addition but an overloaded addidtion using gmp!
+	cout << "Sum is: " << c << "\n";
 	
+
 	return 0;
 }
 
 void get_input() {
-	//if (!::kattis) {
-	//	load_test_values();
-	//	return;
-	//}
+	if (!::kattis) {
+		load_test_values();
+		return;
+	}
+	string temp_input;
+	while (true) {
+		getline(cin, temp_input);
+		if (temp_input.empty()) {break;}
+		::input.push_back(temp_input);
+	}
+}
 
-
-
-  	mpz_class a, b, c;
-  	a = "314159265358979323846264399999999999999";
-  	b = "314159265358979323846264338327950288400";
-  	c = a+b;
-	cout << "Sum is: " << c << "\n";
-  	
-
-
- // 	string integ_str;
- // 	mpz_init (&integ);
- // 	mpz_set_str (&integ, "314159265358979323846264399999999999999", ::base);
-//	mpz_get_str (&integ_str, ::base, &integ);
-//	cout << integ_str << "\n";
-
-//  	MP_INT integ2;
-//  	char integ2_str [39];
-//  	mpz_init_set_str (&integ2, "3141592653589793238462643383279502884", ::base);
-//  	mpz_get_str (&integ_str2, ::base, &integ2);
-//  	cout << integ_str2 << "\n";
-
-//  	mpz_clear (&integ);
-//  	mpz_clear (&integ2);
-
-	//mpz_add(c, a, b);
-	//cin >> ::n;
+void load_test_values() {
+	::input.push_back("20");
+	::input.push_back("175891579187581657617");
+	::input.push_back("4294967291");
 }
 
 
