@@ -12,13 +12,21 @@
 // Run: ./a.out
 //
 // ------------------------- GMP ----------------------------
+// # References for gmp
+//   Link 1 - another programming language but easier to find relevant functions
+//   http://pike.lysator.liu.se/generated/manual/modref/ex/predef_3A_3A/Gmp/mpz.html
+//
+//   Link 2 - The official docs
+//   https://gmplib.org/manual/index.html#Top
+//
 // # Creating variables
-//   Remember to instantize an mpz_class variable before ass-
-//   ignment. For examle
-//      
+//   Remember to instantize an mpz_class variable before ass-ignment. For examle
 //      mpz_class x;
 //      x = "175891579187581657617";
 //
+// # Using gmp(c) fucntions with gmpxx(c++) classes
+//   Remember to always get the mpz_t value when running c functions like so
+//      mpz_nextprime(x.get_mpz_t(), y.get_mpz_t())
 // ********************* DOCUMENTATION *********************
 
 // Imports
