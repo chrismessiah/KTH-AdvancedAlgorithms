@@ -10,7 +10,7 @@
 //
 // ********************* DOCUMENTATION *********************
 
-#include "1000_primes.h"
+#include "1k_primes.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -84,9 +84,9 @@ void rho() {
 void factor_first_1000_primes() {
   for (int i = 0; i < 1000; ++i) {
     while (true) {
-     if ((::factor_input % vec.at(i)) == 0) {
-        cout << vec.at(i) << "\n";
-        ::factor_input = ::factor_input/vec.at(i);
+     if ((::factor_input % prime_1k.at(i)) == 0) {
+        cout << prime_1k.at(i) << "\n";
+        ::factor_input = ::factor_input/prime_1k.at(i);
      } else {
       break;
      }

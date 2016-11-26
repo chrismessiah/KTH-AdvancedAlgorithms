@@ -1,5 +1,5 @@
 #include <vector>
-const std::vector<int> vec = {
+const std::vector<int> prime_1k = {
 2,
 3,
 5,
