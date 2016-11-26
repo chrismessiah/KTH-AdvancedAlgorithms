@@ -1,12 +1,25 @@
-// Travelling Salesperson 2D
-// https://kth.kattis.com/problems/tsp
+// Factoring
+// https://kth.kattis.com/problems/kth.avalg.factoring
 
 // Authors 
 // Christian Abdelmassih
 // Marcus Wallberg
 
-// compile with: g++ *.cpp -lgmp
-// Run with: ./a.out
+// ********************* DOCUMENTATION *********************
+//
+// ---------------------- Compiling ------------------------
+// Compile: g++ main.cpp -lgmp -lgmpxx
+// Run: ./a.out
+//
+// ------------------------- GMP ----------------------------
+// # Creating variables
+//   Remember to instantize an mpz_class variable before ass-
+//   ignment. For examle
+//      
+//      mpz_class x;
+//      x = "175891579187581657617";
+//
+// ********************* DOCUMENTATION *********************
 
 // Imports
 #include <gmp.h>
