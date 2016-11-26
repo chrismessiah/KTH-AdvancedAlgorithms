@@ -8,7 +8,7 @@
 // ********************* DOCUMENTATION *********************
 //
 // ---------------------- Compiling ------------------------
-// Compile: g++ main.cpp -lgmp -lgmpxx
+// Compile: g++ main.cpp -lgmp -lgmpxx -std=c++11
 // Run: ./a.out
 //
 // ------------------------- GMP ----------------------------
