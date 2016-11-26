@@ -87,6 +87,8 @@ void factor_first_1000_primes() {
      if ((::factor_input % prime_1k.at(i)) == 0) {
         cout << prime_1k.at(i) << "\n";
         ::factor_input = ::factor_input/prime_1k.at(i);
+     } else if(::factor_input == 1) {
+      return;
      } else {
       break;
      }
