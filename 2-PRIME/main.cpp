@@ -34,6 +34,7 @@
 #include <gmpxx.h>
 
 #include <vector>
+#include <stack>
 #include <iostream>
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
@@ -44,27 +45,66 @@ int n;
 bool kattis = false;
 int base = 10;
 vector<string> input;
+mpz_class rho_input, rho_output;
+stack<mpz_class> staq;
 
 // function declaractions
 void get_input();
 void load_test_values();
+void rho();
+void factor_this();
+
+void factor_this() {
+	while (true) {
+		cout << "Input is: " << ::rho_input << "\n";
+		rho();
+		cout << "Output is: " << ::rho_output << "\n";
+		if (mpz_cmp_si(::rho_output.get_mpz_t(), -1) == 0) {
+    		// could not factor the number, might already be a prime?
+			::rho_output = ::rho_input;
+
+			int res = mpz_probab_prime_p(::rho_output.get_mpz_t(), 2);
+			if (res == 2) {
+    			// is a prime
+				cout << ::rho_output << "\n";
+			} else if (res == 0) {
+    			// not a prime
+				cout << "fail" << "\n";
+			} else {
+    			// mpz fuction does not know
+				cout <<  "Could be prime" << ::rho_output << "\n";
+			}
+			return;
+		} else {
+    		// found factor but we dont know if its a prime!
+			int res = mpz_probab_prime_p(::rho_output.get_mpz_t(), 2);
+			if (res == 2) {
+    			// is a prime, go ahead and print it!
+				cout << ::rho_output << "\n";
+			} else if (res == 0) {
+    			// not a prime so we need to factor this as well, dont print it yet!
+    			mpz_class temp;
+    			temp = ::rho_input;
+    			::rho_input = ::rho_output;
+				factor_this();
+				::rho_input = temp;
+			} else {
+    			/// we no not know!
+				cout << "What the heck is " << ::rho_output << "???\n";
+			}
+			::rho_input = ::rho_input/::rho_output;
+		}
+	}
+}
 
 int main() {
 	get_input();
-
-	// loop over all values, good for later!
-	cout << "printing input values" << "\n";
+	int i = 0;
 	for(vector<string>::iterator it = ::input.begin(); it != ::input.end(); ++it) {
-    	cout << *it << "\n";
+		::rho_input = *it;
+		factor_this();
+		cout << "\n";
 	}
-
-	// how additions work, also good for later!
-  	mpz_class a, b, c;
-  	a = "314159265358979323846264399999999999999";
-  	b = "314159265358979323846264338327950288400";
-  	c = a+b; // in this case + is not ordinary addition but an overloaded addidtion using gmp!
-	cout << "Sum is: " << c << "\n";
-	
 
 	return 0;
 }
@@ -89,3 +129,28 @@ void load_test_values() {
 }
 
 
+// The algorithm bellow is a copy of the pollard rho algirithm available at
+// http://www.wikiwand.com/en/Pollard's_rho_algorithm
+// please note that it is very similar and may need to be re-written somewhat
+void rho() {
+	mpz_class number, x_fixed, cycle_size, x, factor, x_temp;
+	x_fixed = 2;
+	cycle_size = 2;
+	x = 2;
+	factor = 1;
+
+	while (factor == 1) {
+		for (int count=1;count <= cycle_size && factor <= 1;count++) {
+			x = (x*x+1) % ::rho_input;
+			x_temp = x-x_fixed;
+			mpz_gcd(factor.get_mpz_t(),x_temp.get_mpz_t(), ::rho_input.get_mpz_t());
+		}
+		cycle_size *= 2;
+		x_fixed = x;
+	}
+	if (factor == ::rho_input) {
+  	::rho_output = "-1"; // failed to factor, is already a prime?
+  } else {
+    ::rho_output = factor; // found prime factor!
+}
+}

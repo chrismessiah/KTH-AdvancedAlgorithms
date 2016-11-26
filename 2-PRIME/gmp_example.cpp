@@ -7,7 +7,6 @@
 using namespace std;
 
 mpz_class rho_input;
-//void rho();
 void rho();
 void init_globals();
 
