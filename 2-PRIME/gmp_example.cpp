@@ -18,9 +18,8 @@ int main() {
   // store next prime larger than lower_bound in y2
   mpz_class y2, lower_bound;
   lower_bound = 10;
-  mpz_nextprime();
-  //mpz_nextprime(y2.get_mpz_t(),lower_bound);
-  cout << "2. " << y << "\n";
+  mpz_nextprime(y2.get_mpz_t(),lower_bound.get_mpz_t());
+  cout << "2. " << y2 << "\n";
   
   return 0;
 }
