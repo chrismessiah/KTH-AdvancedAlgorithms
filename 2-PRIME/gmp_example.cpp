@@ -8,6 +8,10 @@
 // Compile: g++ main.cpp -lgmp -lgmpxx -std=c++11
 // Run: ./a.out
 //
+// ------------------ Online Factorizer --------------------
+// Great site for prime factorization
+// http://www.numberempire.com/numberfactorizer.php
+//
 // ********************* DOCUMENTATION *********************
 
 
@@ -15,24 +19,39 @@
 
 // change this to 1k, 10k, or 100k depending on how many primes
 // you want the factor_first_X_primes() to seek through
-#include "1k_primes.h"
+#include "100k_primes.h"
 
 
-
+#include <time.h>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 using namespace std;
 
+clock_t start;
 mpz_class rho_input;
-mpz_class factor_input;
+mpz_class factor_input, factor_input2;
 void rho();
 void init_globals();
 void factor_first_X_primes();
 
+// time fuctions
+void resetTimer();
+void printRunTime();
+double getRunTime();
+
 void init_globals() {
   ::rho_input = 11;
-  ::factor_input = "78742807416";
+
+  // ridiculously large but can actually be factorized to 
+  // 23*127*1231*2791*2299907*95880419*141958116336983 
+  // however, its more than 100 bit so it should only
+  // be used for testing purposes 
+  ::factor_input2 = "314159265358979323846264399999999999999";
+
+  // The largest (unsigned) 100 bit number that exists
+  // we will not be handling numbrs above this.
+  ::factor_input = "1267650600228229401496703205375"
 
 }
 
@@ -54,7 +73,9 @@ int main() {
   cout << "2. " << y2 << "\n";
 
   //rho();
+  resetTimer();
   factor_first_X_primes();
+  printRunTime();
 
   return 0;
 }
@@ -111,4 +132,18 @@ void factor_first_X_primes() {
      }
     }
   }
+}
+
+
+void resetTimer() {
+  ::start = clock();
+}
+
+void printRunTime() {
+  cout << "Current runtime: " << getRunTime() << " s\n";
+}
+
+// returns time in seconds
+double getRunTime() {
+  return(( clock() - ::start ) / (double) CLOCKS_PER_SEC);
 }
