@@ -10,7 +10,14 @@
 //
 // ********************* DOCUMENTATION *********************
 
+
+
+
+// change this to 1k, 10k, or 100k depending on how many primes
+// you want the factor_first_X_primes() to seek through
 #include "1k_primes.h"
+
+
 
 #include <iostream>
 #include <stdio.h>
@@ -21,7 +28,7 @@ mpz_class rho_input;
 mpz_class factor_input;
 void rho();
 void init_globals();
-void factor_first_1000_primes();
+void factor_first_X_primes();
 
 void init_globals() {
   ::rho_input = 11;
@@ -47,7 +54,7 @@ int main() {
   cout << "2. " << y2 << "\n";
 
   //rho();
-  factor_first_1000_primes();
+  factor_first_X_primes();
 
   return 0;
 }
@@ -79,14 +86,24 @@ void rho() {
   }
 }
 
-// Looks through the first 1000 primes and divides factor_input in case it can be divided
+// Looks through the first X primes and divides factor_input in case it can be divided
 // is said to be a good way to make huge numbers smaller
-void factor_first_1000_primes() {
-  for (int i = 0; i < 1000; ++i) {
+void factor_first_X_primes() {
+  bool no_primes_found = true;
+  for (int i = 0; i < prime_vector.size(); ++i) {
+
+    // we may want to loop multiple times for each prime since that prime can occur
+    // more than once
     while (true) {
-     if ((::factor_input % prime_1k.at(i)) == 0) {
-        cout << prime_1k.at(i) << "\n";
-        ::factor_input = ::factor_input/prime_1k.at(i);
+     if ((::factor_input % prime_vector.at(i)) == 0) {
+        ::factor_input = ::factor_input/prime_vector.at(i);
+
+        // if the input is already a prime we don't want to print anything since we can't
+        // factor it!
+        if (no_primes_found && ::factor_input == 1){return;}
+        
+        cout << prime_vector.at(i) << "\n";
+        no_primes_found = false;
      } else if(::factor_input == 1) {
       return;
      } else {
