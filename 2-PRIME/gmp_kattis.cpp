@@ -48,6 +48,12 @@ void reset_globals() {
   ::output_vector.clear();
 }
 
+bool check_if_prime() {
+  int y = mpz_probab_prime_p(::factor_input.get_mpz_t(), 20);
+  if (y == 2 || y == 1) {return true;}
+  return false;
+}
+
 void print_output() {
   if (first_printed) {cout << "\n";}
   ::first_printed = true;
@@ -68,21 +74,22 @@ int main() {
     ::factor_input = *it;
     reset_globals();
     factor_first_X_primes();
-
-
-    // really stupid block of code bellow tbh, need nore sophisticated search here
-    // the thing is that we need to limit the search in case the last prime factor
-    // is simply too large. We cant keep searching forever due to time limit so
-    // at some point we need to give up. For example 
-    //
-    //      175891579187581657617 = 3*7*71*117968865987646987 
-    //
-    // the last prime is so large that we will never find it
-    if (!::no_primes_found && ::factor_input > 1) {
-      last_prime = prime_vector.at(prime_vector.size()-1);
+    if (check_if_prime()) {
+      ::output_vector.push_back(::factor_input);
+      ::found_last_prime = true;
+    } else {
+      // really stupid block of code bellow tbh, need nore sophisticated search here
+      // the thing is that we need to limit the search in case the last prime factor
+      // is simply too large. We cant keep searching forever due to time limit so
+      // at some point we need to give up. For example 
+      //
+      //      175891579187581657617 = 3*7*71*117968865987646987 
+      //
+      // the last prime is so large that we will never find it
+      if (!::no_primes_found && ::factor_input > 1) {
+        last_prime = prime_vector.at(prime_vector.size()-1);
       for (int i = 0; i < 10000; ++i) { // give up after 10k tries
-        y = mpz_probab_prime_p(::factor_input.get_mpz_t(), 20); // should be 15 - 50 accord. to docs
-        if (y == 2) {
+        if (check_if_prime()) {
           ::output_vector.push_back(::factor_input);
           ::found_last_prime = true;
           break;
@@ -99,11 +106,12 @@ int main() {
         last_prime = next_prime;
       }
     }
-
-    print_output();
   }
 
-  return 0;
+  print_output();
+}
+
+return 0;
 }
 
 // Looks through the first X primes and divides factor_input in case it can be divided
