@@ -17,9 +17,10 @@
 
 
 
-// change this to 1k, 10k, or 100k depending on how many primes
-// you want the factor_first_X_primes() to seek through
-#include "100k_primes.h"
+// change this to 1k or 10k depending on how many primes you want the
+// factor_first_X_primes() to seek through Note: Kattis will not search
+// the 100k due to file size limitations
+#include "10k_primes.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -29,11 +30,35 @@ using namespace std;
 void get_input();
 void factor_first_X_primes();
 void load_test_values();
+void reset_globals();
+void print_output();
 
 bool no_primes_found = true;
+bool found_last_prime = false;
+bool first_printed = false;
 bool kattis = false;
 mpz_class factor_input;
 vector<string> input_vector;
+vector<mpz_class> output_vector;
+
+void reset_globals() {
+  ::no_primes_found = true;
+  ::found_last_prime = false;
+  ::kattis = false;
+  ::output_vector.clear();
+}
+
+void print_output() {
+  if (first_printed) {cout << "\n";}
+  ::first_printed = true;
+  if (::found_last_prime) {
+    for(vector<mpz_class>::iterator it = ::output_vector.begin(); it != ::output_vector.end(); ++it) {
+      cout << *it << "\n";
+    }
+  } else {
+    cout << "fail" << "\n";
+  }
+}
 
 int main() {
   int y;
@@ -41,6 +66,7 @@ int main() {
   get_input();
   for(vector<string>::iterator it = ::input_vector.begin(); it != ::input_vector.end(); ++it) {
     ::factor_input = *it;
+    reset_globals();
     factor_first_X_primes();
 
 
@@ -56,19 +82,25 @@ int main() {
       last_prime = prime_vector.at(prime_vector.size()-1);
       for (int i = 0; i < 10000; ++i) { // give up after 10k tries
         y = mpz_probab_prime_p(::factor_input.get_mpz_t(), 20); // should be 15 - 50 accord. to docs
-        if (y == 2) {cout << y << "\n"; break;}
-        if (::factor_input == 1) {break;}
+        if (y == 2) {
+          ::output_vector.push_back(::factor_input);
+          ::found_last_prime = true;
+          break;
+        }
+        if (::factor_input == 1) {
+          ::found_last_prime = true;
+          break;
+        }
         mpz_nextprime(next_prime.get_mpz_t(), last_prime.get_mpz_t());
         if ((::factor_input % next_prime) == 0) {
           ::factor_input = ::factor_input/next_prime;
-          cout << next_prime << "\n";
+          ::output_vector.push_back(next_prime);
         }
         last_prime = next_prime;
       }
     }
 
-
-    cout << "\n";
+    print_output();
   }
 
   return 0;
@@ -82,20 +114,18 @@ void factor_first_X_primes() {
     // we may want to loop multiple times for each prime since that prime can occur
     // more than once
     while (true) {
-     if ((::factor_input % prime_vector.at(i)) == 0) {
+      if (::factor_input == 1) {
+        ::found_last_prime = true;
+        return;
+      }
+      if ((::factor_input % prime_vector.at(i)) == 0) {
         ::factor_input = ::factor_input/prime_vector.at(i);
-
-        // if the input is already a prime we don't want to print anything since we can't
-        // factor it!
-        if (::no_primes_found && ::factor_input == 1){return;}
-        
-        cout << prime_vector.at(i) << "\n";
+        ::output_vector.push_back(prime_vector.at(i));
         ::no_primes_found = false;
-     } else if(::factor_input == 1) {
-      return;
-     } else {
-      break;
-     }
+
+      } else {
+        break;
+      }
     }
   }
 }
