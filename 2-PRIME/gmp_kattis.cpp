@@ -91,7 +91,7 @@ int main() {
       if (!::no_primes_found && ::factor_input > 1) {
         last_prime = prime_vector.at(prime_vector.size()-1);
       for (int i = 0; i < 10000; ++i) { // give up after 10k tries
-        if (check_if_prime()) {
+        if (check_if_prime("s")) {
           ::output_vector.push_back(::factor_input);
           ::found_last_prime = true;
           break;
