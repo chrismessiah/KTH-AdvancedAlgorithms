@@ -48,9 +48,11 @@ void reset_globals() {
   ::output_vector.clear();
 }
 
-bool check_if_prime() {
+// If mode=s (s for soft) this function will also return true if its unsure 
+bool check_if_prime(string mode) {
   int y = mpz_probab_prime_p(::factor_input.get_mpz_t(), 20);
-  if (y == 2 || y == 1) {return true;}
+  if (y == 2) {return true;}
+  if (y == 1 && mode == "s") {return true;}
   return false;
 }
 
@@ -74,7 +76,7 @@ int main() {
     ::factor_input = *it;
     reset_globals();
     factor_first_X_primes();
-    if (check_if_prime()) {
+    if (check_if_prime("s")) {
       ::output_vector.push_back(::factor_input);
       ::found_last_prime = true;
     } else {
