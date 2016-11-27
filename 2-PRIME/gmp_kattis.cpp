@@ -12,6 +12,8 @@
 // Great site for prime factorization
 // http://www.numberempire.com/numberfactorizer.php
 //
+// ------------------ 100-bit highest number  --------------------
+// Assumin unsigned: 0 - 1267650600228229401496703205375
 // ********************* DOCUMENTATION *********************
 
 
@@ -32,6 +34,9 @@ void factor_first_X_primes();
 void load_test_values();
 void reset_globals();
 void print_output();
+void perfect_form_test(int power);
+bool check_if_prime(string mode, mpz_class num);
+bool check_if_prime(string mode);
 
 bool no_primes_found = true;
 bool found_last_prime = false;
@@ -48,9 +53,47 @@ void reset_globals() {
   ::output_vector.clear();
 }
 
+void perfect_form_test(int power) {
+  mpz_class root, input_test;
+  mpz_root(root.get_mpz_t(), ::factor_input.get_mpz_t(), power);
+  mpz_pow_ui(input_test.get_mpz_t(), root.get_mpz_t(), power);
+  if (input_test == ::factor_input && check_if_prime("h", root)) {
+    ::factor_input = root;
+    for (int i = 0; i < power; ++i) {
+      ::output_vector.push_back(root);
+    }
+  }
+}
+
+void quadratic_sieve() {
+
+  // check if we even need qs
+  if (::factor_input == 1) {
+    ::found_last_prime = true;
+    return;
+  }
+
+  // inital perfect square, cube, ... test. No need to check more than to power
+  // of 6 since we already have checked the first 19k primes and the highest is
+  // a 100 bit nuber
+  for (int power = 2; power <= 6; ++power) {
+    perfect_form_test(power);
+  }
+
+  //mpz_class foo = sqrt(::factor_input);
+  //foo += 1;
+}
+
 // If mode=s (s for soft) this function will also return true if its unsure 
 bool check_if_prime(string mode) {
   int y = mpz_probab_prime_p(::factor_input.get_mpz_t(), 20);
+  if (y == 2) {return true;}
+  if (y == 1 && mode == "s") {return true;}
+  return false;
+}
+
+bool check_if_prime(string mode, mpz_class num) {
+  int y = mpz_probab_prime_p(num.get_mpz_t(), 20);
   if (y == 2) {return true;}
   if (y == 1 && mode == "s") {return true;}
   return false;
@@ -80,6 +123,10 @@ int main() {
       ::output_vector.push_back(::factor_input);
       ::found_last_prime = true;
     } else {
+      quadratic_sieve();
+
+
+
       // really stupid block of code bellow tbh, need nore sophisticated search here
       // the thing is that we need to limit the search in case the last prime factor
       // is simply too large. We cant keep searching forever due to time limit so
@@ -88,26 +135,26 @@ int main() {
       //      175891579187581657617 = 3*7*71*117968865987646987 
       //
       // the last prime is so large that we will never find it
-      if (!::no_primes_found && ::factor_input > 1) {
+      /*if (!::no_primes_found && ::factor_input > 1) {
         last_prime = prime_vector.at(prime_vector.size()-1);
-      for (int i = 0; i < 10000; ++i) { // give up after 10k tries
-        if (check_if_prime("s")) {
-          ::output_vector.push_back(::factor_input);
-          ::found_last_prime = true;
-          break;
+        for (int i = 0; i < 10000; ++i) { // give up after 10k tries
+         if (check_if_prime("s")) {
+            ::output_vector.push_back(::factor_input);
+            ::found_last_prime = true;
+            break;
+          }
+          if (::factor_input == 1) {
+            ::found_last_prime = true;
+            break;
+          }
+          mpz_nextprime(next_prime.get_mpz_t(), last_prime.get_mpz_t());
+          if ((::factor_input % next_prime) == 0) {
+           ::factor_input = ::factor_input/next_prime;
+           ::output_vector.push_back(next_prime);
+          }
+          last_prime = next_prime;
         }
-        if (::factor_input == 1) {
-          ::found_last_prime = true;
-          break;
-        }
-        mpz_nextprime(next_prime.get_mpz_t(), last_prime.get_mpz_t());
-        if ((::factor_input % next_prime) == 0) {
-          ::factor_input = ::factor_input/next_prime;
-          ::output_vector.push_back(next_prime);
-        }
-        last_prime = next_prime;
-      }
-    }
+      }*/
   }
 
   print_output();
