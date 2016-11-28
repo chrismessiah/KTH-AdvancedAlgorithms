@@ -37,6 +37,7 @@ void print_output();
 void perfect_form_test(int power);
 bool check_if_prime(string mode, mpz_class num);
 bool check_if_prime(string mode);
+void get_factor_base_limit();
 
 bool no_primes_found = true;
 bool found_last_prime = false;
@@ -51,6 +52,24 @@ void reset_globals() {
   ::found_last_prime = false;
   ::kattis = false;
   ::output_vector.clear();
+}
+
+
+void get_factor_base_limit() {
+  double log_N, log_log_N;
+  mpf_class f_N, e;
+  e = "2.71828182845904523536028747135266249775724709369995";
+  f_N = ::factor_input;
+  
+  log_N = log(f_N.get_d());                                   //log_N = log(N)
+  log_log_N = log(log_N);                                     //log_log_N = log(log(N))
+  f_N = mpf_class(log_N) * mpf_class(log_log_N);              //f_N = log(N) * log(log(N))
+  f_N = ( sqrt(f_N) )/2;                                      //f_N = sqrt(f_N)/2    
+  mpf_pow_ui(f_N.get_mpf_t(), e.get_mpf_t(), f_N.get_ui());   //f_N = e^f_N
+
+  mpz_class base_mpz;
+  base_mpz = round(f_N.get_d());
+  cout << "factor base: " << base_mpz << "\n";
 }
 
 // checks whenether ::factor_input is a perfect square, cube etc. As mpz is 
