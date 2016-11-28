@@ -22,7 +22,7 @@
 // change this to 1k or 10k depending on how many primes you want the
 // factor_first_X_primes() to seek through Note: Kattis will not search
 // the 100k due to file size limitations
-#include "10k_primes.h"
+#include "19k_primes.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -53,6 +53,8 @@ void reset_globals() {
   ::output_vector.clear();
 }
 
+// checks whenether ::factor_input is a perfect square, cube etc. As mpz is 
+// integer only we do not need a floow function here. 
 void perfect_form_test(int power) {
   mpz_class root, input_test;
   mpz_root(root.get_mpz_t(), ::factor_input.get_mpz_t(), power);
