@@ -5,7 +5,8 @@ PART OF THIS CODE IS STOLEN FROM SOMEONE ELSE, WE'RE JUST RUNNING IT IN KATTIS T
 */
 
 #include <gmp.h>
-#include <gmpxx.h>#include <iostream>
+#include <gmpxx.h>
+#include <iostream>
 #include <iomanip>
 #include <vector>
 #include <algorithm>
@@ -428,6 +429,7 @@ std::pair<uint32_t, uint32_t> tonelliShanks(uint32_t n, uint32_t p) {
 * Takes an integer N as input and returns a factor of N.
 */
 mpz_class quadraticSieve(mpz_class& N) {
+  int count = 0;
 
   // Some useful functions of N.
   float logN = mpz_sizeinbase(N.get_mpz_t(), 2) * std::log(2); // Approx.
@@ -633,8 +635,11 @@ mpz_class quadraticSieve(mpz_class& N) {
     std::vector<uint32_t> decomp(factorBase.size(), 0);
     for (uint32_t i = 0; i < smoothFactors.size(); ++i) {
       if (x[i] == 1) {
-        for(uint32_t p = 0; p < smoothFactors[i].size(); ++p)
-        ++decomp[smoothFactors[i][p]];
+        for(uint32_t p = 0; p < smoothFactors[i].size(); ++p) {
+          ++decomp[smoothFactors[i][p]];
+          count++;
+          if (count > 10000){return N;}
+        }
         b *= (smooth[i] + sqrtN);
       }
     }
