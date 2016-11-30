@@ -43,7 +43,8 @@ void brent_rho();
 bool no_primes_found = true;
 bool found_last_prime = false;
 bool first_printed = false;
-bool kattis = false;
+bool kattis = true;
+bool stuck = false;
 mpz_class factor_input, rand_result, rand_upper, rand_lower;
 vector<string> input_vector;
 vector<mpz_class> output_vector;
@@ -52,6 +53,7 @@ void reset_globals() {
 	::no_primes_found = true;
 	::found_last_prime = false;
 	::kattis = false;
+  ::stuck = false;
 	::output_vector.clear();
 }
 
@@ -106,6 +108,8 @@ void getRandInt() {
 // Do NOT input primes here!!!!!!
 // seems to be able to output non-prime numbers due to gcd
 void brent_rho() {
+  int count = 0;      // for limiting infitate loops
+  int limit = 1000;   // for limiting infitate loops
 	mpz_class y,c,m,g,q,ys, min_var, x, N, r, k;
 	N = ::factor_input;
 	::rand_lower = 1;
@@ -119,6 +123,12 @@ void brent_rho() {
 	while (g == 1) {
 		x = y;
 		for (int i = 0; i < r; ++i) {
+
+      // limit checker to prevent inifinite loops
+      count += 1;
+      if (count > limit){::stuck = true; return;}
+       // limit checker to prevent inifinite loops
+
 			y = ( (y*y) % N +c ) % N;
 		}
 		k = 0;
@@ -134,9 +144,18 @@ void brent_rho() {
 		}
 		r *= 2;
 	}
+  
+  count = 0;  // limit checker to prevent inifinite loops
+
 	if (g == N) {
 		while (true) {
-			ys = ( (ys * ys) % N + c ) % N;
+
+       // limit checker to prevent inifinite loops
+      count += 1;
+      if (count > limit){::stuck = true; return;}
+       // limit checker to prevent inifinite loops
+			
+      ys = ( (ys * ys) % N + c ) % N;
 			g = gcd( abs(x-ys), N);
 			if (g > 1) {break;}
 		}
@@ -168,6 +187,7 @@ int main() {
 				}
 				
 				brent_rho();
+        if (::stuck){break;}
 				
 				if (check_if_prime("s")) {	
 					::output_vector.push_back(::factor_input);
