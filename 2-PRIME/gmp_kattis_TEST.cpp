@@ -1,6 +1,9 @@
 /* DISCLAIMER
 
 PART OF THIS CODE IS STOLEN FROM SOMEONE ELSE, WE'RE JUST RUNNING IT IN KATTIS TO TRY QS
+PART OF THIS CODE IS STOLEN FROM SOMEONE ELSE, WE'RE JUST RUNNING IT IN KATTIS TO TRY QS
+PART OF THIS CODE IS STOLEN FROM SOMEONE ELSE, WE'RE JUST RUNNING IT IN KATTIS TO TRY QS
+PART OF THIS CODE IS STOLEN FROM SOMEONE ELSE, WE'RE JUST RUNNING IT IN KATTIS TO TRY QS
 
 */
 
@@ -38,7 +41,7 @@ PART OF THIS CODE IS STOLEN FROM SOMEONE ELSE, WE'RE JUST RUNNING IT IN KATTIS T
 // change this to 1k or 10k depending on how many primes you want the
 // factor_first_X_primes() to seek through Note: Kattis will not search
 // the 100k due to file size limitations
-#include "19k_primes.h"
+#include "10k_primes.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -49,7 +52,7 @@ std::vector<uint32_t> generateFactorBase(mpz_class& N, uint32_t B);
 uint64_t modularPow(uint64_t b, uint64_t e, uint64_t m);
 int32_t legendreSymbol(uint32_t a, uint32_t p);
 std::pair<uint32_t, uint32_t> tonelliShanks(uint32_t n, uint32_t p);
-mpz_class quadraticSieve(mpz_class& N);
+mpz_class quadraticSieve(mpz_class& N, int count, int limit);
 
 void get_input();
 void factor_first_X_primes();
@@ -211,14 +214,19 @@ void brent_rho() {
 }
 
 int main() {
+  vector<mpz_class> vec;
+  vector<mpz_class>::iterator it_begin;
   get_input();
   for(vector<string>::iterator it = ::input_vector.begin(); it != ::input_vector.end(); ++it) {
     ::factor_input = *it;
     ::untouched_input = *it;
+    vec.clear();
+
     reset_globals();
     factor_first_X_primes();
-    //if (check_if_prime("s")) {
-    if (false) {
+    perfect_form_test(2);
+    if (check_if_prime("h")) {
+    //if (false) {
       ::output_vector.push_back(::factor_input);
       ::found_last_prime = true;
     } else {
@@ -226,20 +234,43 @@ int main() {
         ::found_last_prime = true;
       } else {
         mpz_class qs_result;
-        for (int i = 0; i < 2; ++i) {
+        while (true) {
+          if (!vec.empty()) {
+            ::factor_input = vec[vec.size()-1];
+          }
+        //for (int i = 0; i < 2; ++i) {
           int y = mpz_probab_prime_p(::factor_input.get_mpz_t(), 50);
           if (y == 2) {
             ::output_vector.push_back(::factor_input);
             ::found_last_prime = true;
-            break;
+            if (vec.empty()) {break;}
           }
-          qs_result = quadraticSieve(::factor_input);
-          if(::factor_input == qs_result){
-            ::output_vector.push_back(::factor_input);
-            ::found_last_prime = true;
-            break;
+
+          perfect_form_test(2);
+          qs_result = quadraticSieve(::factor_input, 0, 3000);
+          cout << "QS: " << qs_result << endl;
+
+          if(::factor_input == qs_result || ::stuck) {
+
+            if (check_if_prime("s")) {
+              ::output_vector.push_back(::factor_input);
+              ::found_last_prime = true;
+            }
+            if (vec.empty()) {break;}
+
+
+          } else {
+            if (check_if_prime("s")) {
+              ::output_vector.push_back(qs_result);
+              ::factor_input /= qs_result;
+            } else {
+              it_begin = vec.begin();
+              vec.insert(it_begin, qs_result);
+              it_begin = vec.begin();
+              vec.insert(it_begin, ::factor_input/qs_result);
+              vec.pop_back();
+            }
           }
-          ::factor_input /= qs_result;
         }
       }
     }
@@ -416,8 +447,7 @@ while (legendreSymbol(z, p) != -1)
 *
 * Takes an integer N as input and returns a factor of N.
 */
-mpz_class quadraticSieve(mpz_class& N) {
-  int count = 0;
+mpz_class quadraticSieve(mpz_class& N, int count, int limit) {
 
   // Some useful functions of N.
   float logN = mpz_sizeinbase(N.get_mpz_t(), 2) * std::log(2); // Approx.
@@ -621,7 +651,10 @@ do {
       for(uint32_t p = 0; p < smoothFactors[i].size(); ++p) {
         ++decomp[smoothFactors[i][p]];
         count++;
-        if (count > 10000){return N;}
+        if (count > limit){
+          ::stuck = true;
+          return N;
+        }
       }
       b *= (smooth[i] + sqrtN);
     }
