@@ -39,11 +39,12 @@ bool check_if_prime(string mode, mpz_class num);
 bool check_if_prime(string mode);
 int getRandInt(int lower_bound, int upper_bound);
 void brent_rho();
+void check_2();
 
 bool no_primes_found = true;
 bool found_last_prime = false;
 bool first_printed = false;
-bool kattis = true;
+bool kattis = false;
 bool stuck = false;
 mpz_class factor_input, rand_result, rand_upper, rand_lower;
 vector<string> input_vector;
@@ -53,7 +54,7 @@ void reset_globals() {
 	::no_primes_found = true;
 	::found_last_prime = false;
 	::kattis = false;
-  ::stuck = false;
+	::stuck = false;
 	::output_vector.clear();
 }
 
@@ -104,36 +105,45 @@ void getRandInt() {
 	::rand_result = r1.get_z_range(::rand_upper-::rand_lower) + ::rand_lower;
 }
 
+void check_2() {
+	while (::factor_input % 2 == 0) {
+		::factor_input /= 2;
+		::output_vector.push_back(2);
+		::no_primes_found = false;
+	}
+}
+
 // Source: https://comeoncodeon.wordpress.com/2010/09/18/pollard-rho-brent-integer-factorization/
 // Do NOT input primes here!!!!!!
 // seems to be able to output non-prime numbers due to gcd
 void brent_rho() {
-  int count = 0;      // for limiting infitate loops
-  int limit = 1000;   // for limiting infitate loops
-	mpz_class y,c,m,g,q,ys, min_var, x, N, r, k;
-	N = ::factor_input;
-	::rand_lower = 1;
-	::rand_upper = N-1;
-	getRandInt(); y = ::rand_result;
-	getRandInt(); c = ::rand_result;
-	getRandInt(); m = ::rand_result;
-	g = 1;
-	r = 1;
-	q = 1;
-	while (g == 1) {
-		x = y;
-		for (int i = 0; i < r; ++i) {
+	check_2();
 
-      // limit checker to prevent inifinite loops
-      count += 1;
-      if (count > limit){::stuck = true; return;}
-       // limit checker to prevent inifinite loops
-
-			y = ( (y*y) % N +c ) % N;
-		}
-		k = 0;
-		while (k < r && g == 1) {
-			ys = y;
+	int count = 0;      // for limiting infitate loops
+  	int limit = 2000;   // for limiting infitate loops
+  	mpz_class y,c,m,g,q,ys, min_var, x, N, r, k;
+  	N = ::factor_input;
+  	::rand_lower = 1;
+  	::rand_upper = N-1;
+  	getRandInt(); y = ::rand_result;
+  	getRandInt(); c = ::rand_result;
+  	getRandInt(); m = ::rand_result;
+  	g = 1;
+  	r = 1;
+  	q = 1;
+  	while (g == 1) {
+  		x = y;
+  		for (int i = 0; i < r; ++i) {
+      		
+      		// limit checker to prevent inifinite loops
+  			count += 1;
+  			if (count > limit){::stuck = true; return;}
+       		// limit checker to prevent inifinite loops
+  			y = ( (y*y) % N +c ) % N;
+  		}
+  		k = 0;
+  		while (k < r && g == 1) {
+  			ys = y;
 			min_var = (m <= r-k) ? m : r-k; // min function
 			for (int i = 0; i < min_var; ++i) {
 				y = ( (y*y) % N + c ) % N;
@@ -144,28 +154,28 @@ void brent_rho() {
 		}
 		r *= 2;
 	}
-  
-  count = 0;  // limit checker to prevent inifinite loops
 
-	if (g == N) {
-		while (true) {
+  	count = 0;  // limit checker to prevent inifinite loops
 
-       // limit checker to prevent inifinite loops
-      count += 1;
-      if (count > limit){::stuck = true; return;}
-       // limit checker to prevent inifinite loops
-			
-      ys = ( (ys * ys) % N + c ) % N;
-			g = gcd( abs(x-ys), N);
-			if (g > 1) {break;}
-		}
-	}
+  	if (g == N) {
+  		while (true) {
 
-	::factor_input /= g;
-	::output_vector.push_back(g);
-	::no_primes_found = false;
+       	// limit checker to prevent inifinite loops
+  		count += 1;
+  		if (count > limit){::stuck = true; return;}
+       	// limit checker to prevent inifinite loops
 
-	return;
+  		ys = ( (ys * ys) % N + c ) % N;
+  		g = gcd( abs(x-ys), N);
+  		if (g > 1) {break;}
+  	}
+  }
+
+  ::factor_input /= g;
+  ::output_vector.push_back(g);
+  ::no_primes_found = false;
+
+  return;
 }
 
 int main() {
@@ -175,19 +185,20 @@ int main() {
 		::factor_input = *it;
 		reset_globals();
 		factor_first_X_primes();
-		if (check_if_prime("s")) {
+		//if (check_if_prime("s")) {
+		if (false) {
 			::output_vector.push_back(::factor_input);
 			::found_last_prime = true;
 		} else {
 			//while(::factor_input != 1) {
-			for (int i = 0; i < 6; ++i){ // max amount of loops needed
+			for (int i = 0; i < 8; ++i){ // max amount of loops needed
 				if (::factor_input == 1) {
 					::found_last_prime = true;
 					break;
 				}
 				
 				brent_rho();
-        if (::stuck){break;}
+				if (::stuck){break;}
 				
 				if (check_if_prime("s")) {	
 					::output_vector.push_back(::factor_input);
