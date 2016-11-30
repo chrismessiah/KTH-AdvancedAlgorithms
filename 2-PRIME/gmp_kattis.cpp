@@ -54,24 +54,6 @@ void reset_globals() {
   ::output_vector.clear();
 }
 
-
-void get_factor_base_limit() {
-  double log_N, log_log_N;
-  mpf_class f_N, e;
-  e = "2.71828182845904523536028747135266249775724709369995";
-  f_N = ::factor_input;
-  
-  log_N = log(f_N.get_d());                                   //log_N = log(N)
-  log_log_N = log(log_N);                                     //log_log_N = log(log(N))
-  f_N = mpf_class(log_N) * mpf_class(log_log_N);              //f_N = log(N) * log(log(N))
-  f_N = ( sqrt(f_N) )/2;                                      //f_N = sqrt(f_N)/2    
-  mpf_pow_ui(f_N.get_mpf_t(), e.get_mpf_t(), f_N.get_ui());   //f_N = e^f_N
-
-  mpz_class base_mpz;
-  base_mpz = round(f_N.get_d());
-  cout << "factor base: " << base_mpz << "\n";
-}
-
 // checks whenether ::factor_input is a perfect square, cube etc. As mpz is 
 // integer only we do not need a floow function here. 
 void perfect_form_test(int power) {
@@ -84,25 +66,6 @@ void perfect_form_test(int power) {
       ::output_vector.push_back(root);
     }
   }
-}
-
-void quadratic_sieve() {
-
-  // check if we even need qs
-  if (::factor_input == 1) {
-    ::found_last_prime = true;
-    return;
-  }
-
-  // inital perfect square, cube, ... test. No need to check more than to power
-  // of 6 since we already have checked the first 19k primes and the highest is
-  // a 100 bit nuber
-  for (int power = 2; power <= 6; ++power) {
-    perfect_form_test(power);
-  }
-
-  //mpz_class foo = sqrt(::factor_input);
-  //foo += 1;
 }
 
 // If mode=s (s for soft) this function will also return true if its unsure 
@@ -144,38 +107,7 @@ int main() {
       ::output_vector.push_back(::factor_input);
       ::found_last_prime = true;
     } else {
-      quadratic_sieve();
-
-
-
-      // really stupid block of code bellow tbh, need nore sophisticated search here
-      // the thing is that we need to limit the search in case the last prime factor
-      // is simply too large. We cant keep searching forever due to time limit so
-      // at some point we need to give up. For example 
-      //
-      //      175891579187581657617 = 3*7*71*117968865987646987 
-      //
-      // the last prime is so large that we will never find it
-      /*if (!::no_primes_found && ::factor_input > 1) {
-        last_prime = prime_vector.at(prime_vector.size()-1);
-        for (int i = 0; i < 10000; ++i) { // give up after 10k tries
-         if (check_if_prime("s")) {
-            ::output_vector.push_back(::factor_input);
-            ::found_last_prime = true;
-            break;
-          }
-          if (::factor_input == 1) {
-            ::found_last_prime = true;
-            break;
-          }
-          mpz_nextprime(next_prime.get_mpz_t(), last_prime.get_mpz_t());
-          if ((::factor_input % next_prime) == 0) {
-           ::factor_input = ::factor_input/next_prime;
-           ::output_vector.push_back(next_prime);
-          }
-          last_prime = next_prime;
-        }
-      }*/
+      //quadratic_sieve();
   }
 
   print_output();
