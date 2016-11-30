@@ -31,7 +31,6 @@ using namespace std;
 clock_t start;
 mpz_class rho_input;
 mpz_class factor_input, factor_input2;
-void rho();
 void init_globals();
 void factor_first_X_primes();
 
@@ -72,39 +71,11 @@ int main() {
   mpz_nextprime(y2.get_mpz_t(),lower_bound.get_mpz_t());
   cout << "2. " << y2 << "\n";
 
-  //rho();
   resetTimer();
   factor_first_X_primes();
   printRunTime();
 
   return 0;
-}
-
-// The algorithm bellow is a copy of the pollard rho algirithm available at
-// http://www.wikiwand.com/en/Pollard's_rho_algorithm
-// please note that it is very similar and may need to be re-written somewhat
-// ALSO THIS RETURNS NON-PRIME FACTORIALS!!!!!!!!!!!!!!!!!!!!!!!!!!
-void rho() {
-  mpz_class number, x_fixed, cycle_size, x, factor, x_temp;
-  x_fixed = 2;
-  cycle_size = 2;
-  x = 2;
-  factor = 1;
-
-  while (factor == 1) {
-    for (int count=1;count <= cycle_size && factor <= 1;count++) {
-      x = (x*x+1) % ::rho_input;
-      x_temp = x-x_fixed;
-      mpz_gcd(factor.get_mpz_t(),x_temp.get_mpz_t(), ::rho_input.get_mpz_t());
-    }
-    cycle_size *= 2;
-    x_fixed = x;
-  }
-  if (factor == ::rho_input) {
-    cout << "The input " << factor << " is already a prime!\n";
-  } else {
-    cout << "\nThe factor is " << factor << "\n";
-  }
 }
 
 // Looks through the first X primes and divides factor_input in case it can be divided
