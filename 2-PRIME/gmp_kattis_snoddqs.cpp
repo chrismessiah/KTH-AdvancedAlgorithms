@@ -16,7 +16,6 @@ PART OF THIS CODE IS STOLEN FROM SOMEONE ELSE, WE'RE JUST RUNNING IT IN KATTIS T
 
 #undef ENABLE_TIMER
 
-#include "timer.h"
 #include "matrix.h"
 
 // ********************* DOCUMENTATION *********************
@@ -217,7 +216,7 @@ int main() {
     ::factor_input = *it;
     ::untouched_input = *it;
     reset_globals();
-    // factor_first_X_primes();
+    factor_first_X_primes();
     //if (check_if_prime("s")) {
     if (false) {
       ::output_vector.push_back(::factor_input);
@@ -225,34 +224,23 @@ int main() {
     } else {
       if (::factor_input == 1) {
         ::found_last_prime = true;
-        break;
-      }
-
-      brent_rho();
-      if (::stuck){break;}
-
-      if (check_if_prime("h")) {
-        ::output_vector.push_back(::factor_input);
-        ::found_last_prime = true;
-        break;
-      }
-
-      mpz_class qs_result;
-      for (int i = 0; i < 4; ++i) {
-        int y = mpz_probab_prime_p(::factor_input.get_mpz_t(), 50);
-        if (y == 2) {
-          ::output_vector.push_back(::factor_input);
-          ::found_last_prime = true;
-          break;
+      } else {
+        mpz_class qs_result;
+        for (int i = 0; i < 2; ++i) {
+          int y = mpz_probab_prime_p(::factor_input.get_mpz_t(), 50);
+          if (y == 2) {
+            ::output_vector.push_back(::factor_input);
+            ::found_last_prime = true;
+            break;
+          }
+          qs_result = quadraticSieve(::factor_input);
+          if(::factor_input == qs_result){
+            ::output_vector.push_back(::factor_input);
+            ::found_last_prime = true;
+            break;
+          }
+          ::factor_input /= qs_result;
         }
-        qs_result = quadraticSieve(::factor_input);
-
-        if (::factor_input == qs_result) {
-          ::output_vector.push_back(::factor_input);
-          ::found_last_prime = true;
-          break;
-        }
-        ::factor_input /= qs_result;
       }
     }
 
@@ -327,15 +315,15 @@ std::vector<uint32_t> generateFactorBase(mpz_class& N, uint32_t B) {
   std::vector<bool> sieve(B + 1, false);
   for (uint32_t p = 2; p <= B; ++p) {
     if (sieve[p])
-    continue;
+      continue;
 
     // Add p to factor base if N is a quadratic residue modulo p.
     if (mpz_legendre(N.get_mpz_t(), mpz_class(p).get_mpz_t()) == 1)
-    factorBase.push_back(p);
+      factorBase.push_back(p);
 
     // Add multiples of p to sieve.
     for (uint32_t i = p; i <= B; i += p)
-    sieve[i] = true;
+      sieve[i] = true;
   }
 
   return factorBase;
@@ -349,7 +337,7 @@ uint64_t modularPow(uint64_t b, uint64_t e, uint64_t m) {
   while (e > 0) {
     if (e & 1) // For each set bit in exponent.
     result = (result * b) % m; // Multiply result by b^2^i.
-    e >>= 1;
+  e >>= 1;
     b = (b * b) % m; // Square the base.
   }
   return result;
@@ -381,16 +369,16 @@ std::pair<uint32_t, uint32_t> tonelliShanks(uint32_t n, uint32_t p) {
   return std::make_pair(n, n); // Double root.
 
   // Define Q2^S = p - 1.
-  uint64_t Q = p - 1;
-  uint64_t S = 0;
-  while (Q % 2 == 0) {
-    Q /= 2;
-    ++S;
-  }
+uint64_t Q = p - 1;
+uint64_t S = 0;
+while (Q % 2 == 0) {
+  Q /= 2;
+  ++S;
+}
 
   // Define z as the first quadratic non-residue modulo p.
-  uint64_t z = 2;
-  while (legendreSymbol(z, p) != -1)
+uint64_t z = 2;
+while (legendreSymbol(z, p) != -1)
   ++z;
 
   // Initialize c, R, t and M.
@@ -404,7 +392,7 @@ std::pair<uint32_t, uint32_t> tonelliShanks(uint32_t n, uint32_t p) {
     // Find lowest 0 < i < M such that t^2^i = 1 (mod p).
     int32_t i = 1;
     while (modularPow(t, std::pow(2, i), p) != 1)
-    ++i;
+      ++i;
 
     // Set b = c^2^(M - i - 1)
     uint64_t b = modularPow(c, std::pow(2, M - i - 1), p);
@@ -450,20 +438,19 @@ mpz_class quadraticSieve(mpz_class& N) {
   *
   * Generate factor base.
   */
-  START();
   std::vector<uint32_t> factorBase = generateFactorBase(N, B);
-  STOP("Generated factor base");
+  
 
   /*
   * Step 2
   *
   * Calculate start indices for each number in the factor base.
   */
-  START();
+  
   std::pair<std::vector<uint32_t>, std::vector<uint32_t> > startIndex(
     std::vector<uint32_t>(factorBase.size()), // Vector of first start index.
     std::vector<uint32_t>(factorBase.size())  // Vector of second start index.
-  );
+    );
   for (uint32_t i = 0; i < factorBase.size(); ++i) {
     uint32_t p = factorBase[i];                   // Prime from our factor base.
     uint32_t N_mod_p = mpz_class(N % p).get_ui(); // N reduced modulo p.
@@ -482,7 +469,6 @@ mpz_class quadraticSieve(mpz_class& N) {
     startIndex.first[i] = mpz_class((((x.first - sqrtN) % p) + p) % p).get_ui();
     startIndex.second[i] = mpz_class((((x.second - sqrtN) % p) + p) % p).get_ui();
   }
-  STOP("Calculated indices");
 
   /************************************
   *                                  *
@@ -515,7 +501,7 @@ mpz_class quadraticSieve(mpz_class& N) {
     *
     * Generate log approximations of Q = (a + sqrt(N))^2 - N in the current interval.
     */
-    START();
+
     for (uint32_t i = 1, a = intervalStart + 1; i < INTERVAL_LENGTH; ++i, ++a) {
       if (nextLogEstimate <= a) {
         mpz_class Q = (a + sqrtN) * (a + sqrtN) - N;
@@ -524,14 +510,13 @@ mpz_class quadraticSieve(mpz_class& N) {
       }
       logApprox[i] = prevLogEstimate;
     }
-    STOP("Log approx");
 
     /*
     * Step 2.1.2
     *
     * Sieve for numbers in the sequence that factor completely over the factor base.
     */
-    START();
+
     for (uint32_t i = 0; i < factorBase.size(); ++i) {
       uint32_t p = factorBase[i];
       float logp = std::log(factorBase[i]) / std::log(2);
@@ -546,31 +531,30 @@ mpz_class quadraticSieve(mpz_class& N) {
       continue; // a^2 = N (mod 2) only has one root.
 
       // Sieve second sequence.
-      while (startIndex.second[i] < intervalEnd) {
-        logApprox[startIndex.second[i] - intervalStart] -= logp;
-        startIndex.second[i] += p;
-      }
+    while (startIndex.second[i] < intervalEnd) {
+      logApprox[startIndex.second[i] - intervalStart] -= logp;
+      startIndex.second[i] += p;
     }
-    STOP("Sieve");
+  }
 
     /*
     * Step 2.1.3
     *
     * Factor values of Q whose ~logarithms were reduced to ~zero during sieving.
     */
-    START();
-    float threshold = std::log(factorBase.back()) / std::log(2);
-    for (uint32_t i = 0, a = intervalStart; i < INTERVAL_LENGTH; ++i, ++a) {
-      if (std::fabs(logApprox[i]) < threshold) {
-        mpz_class Q = (a + sqrtN) * (a + sqrtN) - N;
-        std::vector<uint32_t> factors;
+
+  float threshold = std::log(factorBase.back()) / std::log(2);
+  for (uint32_t i = 0, a = intervalStart; i < INTERVAL_LENGTH; ++i, ++a) {
+    if (std::fabs(logApprox[i]) < threshold) {
+      mpz_class Q = (a + sqrtN) * (a + sqrtN) - N;
+      std::vector<uint32_t> factors;
 
         // For each factor p in the factor base.
-        for (uint32_t j = 0; j < factorBase.size(); ++j) {
+      for (uint32_t j = 0; j < factorBase.size(); ++j) {
           // Repeatedly divide Q by p until it's not possible anymore.
-          uint32_t p = factorBase[j];
-          while (mpz_divisible_ui_p(Q.get_mpz_t(), p)) {
-            mpz_divexact_ui(Q.get_mpz_t(), Q.get_mpz_t(), p);
+        uint32_t p = factorBase[j];
+        while (mpz_divisible_ui_p(Q.get_mpz_t(), p)) {
+          mpz_divexact_ui(Q.get_mpz_t(), Q.get_mpz_t(), p);
             factors.push_back(j); // The j:th factor base number was a factor.
           }
         }
@@ -581,14 +565,13 @@ mpz_class quadraticSieve(mpz_class& N) {
         }
         if (smooth.size() >= factorBase.size() + 20)
         break; // We have enough smooth numbers, so stop factoring.
-      }
     }
-    STOP("Factor");
+  }
 
     // Move on to next interval.
-    intervalStart += INTERVAL_LENGTH;
-    intervalEnd += INTERVAL_LENGTH;
-  }
+  intervalStart += INTERVAL_LENGTH;
+  intervalEnd += INTERVAL_LENGTH;
+}
 
 
   /************************************
@@ -603,12 +586,12 @@ mpz_class quadraticSieve(mpz_class& N) {
   * Construct a binary matrix M with M_ij = the parity of the i:th prime factor
   * from the factor base in the factorization of the j:th B-smooth number.
   */
-  Matrix M(factorBase.size(), smoothFactors.size() + 1);
-  for (uint32_t i = 0; i < smoothFactors.size(); ++i) {
-    for (uint32_t j = 0; j < smoothFactors[i].size(); ++j) {
-      M(smoothFactors[i][j], i).flip();
-    }
+Matrix M(factorBase.size(), smoothFactors.size() + 1);
+for (uint32_t i = 0; i < smoothFactors.size(); ++i) {
+  for (uint32_t j = 0; j < smoothFactors[i].size(); ++j) {
+    M(smoothFactors[i][j], i).flip();
   }
+}
 
   /*
   * Step 3.2
@@ -616,15 +599,15 @@ mpz_class quadraticSieve(mpz_class& N) {
   * Reduce the matrix to row echelon form and solve it repeatedly until a factor
   * is found.
   */
-  M.reduce();
-  mpz_class a;
-  mpz_class b;
+M.reduce();
+mpz_class a;
+mpz_class b;
 
-  do {
-    std::vector<uint32_t> x = M.solve();
+do {
+  std::vector<uint32_t> x = M.solve();
 
-    a = 1;
-    b = 1;
+  a = 1;
+  b = 1;
 
     /*
     * Calculate b = product(smooth[i] + sqrt(N)).
@@ -632,28 +615,28 @@ mpz_class quadraticSieve(mpz_class& N) {
     * Also calculate the the power of each prime in a's decomposition on the
     * factor base.
     */
-    std::vector<uint32_t> decomp(factorBase.size(), 0);
-    for (uint32_t i = 0; i < smoothFactors.size(); ++i) {
-      if (x[i] == 1) {
-        for(uint32_t p = 0; p < smoothFactors[i].size(); ++p) {
-          ++decomp[smoothFactors[i][p]];
-          count++;
-          if (count > 10000){return N;}
-        }
-        b *= (smooth[i] + sqrtN);
+  std::vector<uint32_t> decomp(factorBase.size(), 0);
+  for (uint32_t i = 0; i < smoothFactors.size(); ++i) {
+    if (x[i] == 1) {
+      for(uint32_t p = 0; p < smoothFactors[i].size(); ++p) {
+        ++decomp[smoothFactors[i][p]];
+        count++;
+        if (count > 10000){return N;}
       }
+      b *= (smooth[i] + sqrtN);
     }
+  }
 
     /*
     * Calculate a = sqrt(product(factorBase[p])).
     */
-    for(uint32_t p = 0; p < factorBase.size(); ++p) {
-      for(uint32_t i = 0; i < (decomp[p] / 2); ++i)
+  for(uint32_t p = 0; p < factorBase.size(); ++p) {
+    for(uint32_t i = 0; i < (decomp[p] / 2); ++i)
       a *= factorBase[p];
-    }
+  }
 
     // a = +/- b (mod N) means we have a trivial factor :(
-  } while (a % N == b % N || a % N == (- b) % N + N);
+} while (a % N == b % N || a % N == (- b) % N + N);
 
 
   /************************************
@@ -662,8 +645,8 @@ mpz_class quadraticSieve(mpz_class& N) {
   *                                  *
   ***********************************/
 
-  mpz_class factor;
-  mpz_gcd(factor.get_mpz_t(), mpz_class(b - a).get_mpz_t(), N.get_mpz_t());
+mpz_class factor;
+mpz_gcd(factor.get_mpz_t(), mpz_class(b - a).get_mpz_t(), N.get_mpz_t());
 
-  return factor;
+return factor;
 }
