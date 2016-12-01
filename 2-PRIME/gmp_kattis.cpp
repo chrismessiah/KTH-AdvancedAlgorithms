@@ -24,6 +24,7 @@
 // the 100k due to file size limitations
 #include "19k_primes.h"
 
+#include <stack>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,85 +53,75 @@ int main() {
   vector<string> input_numbers = get_input();
   vector<mpz_class> output_numbers;
   mpz_class mpz_input;
+  stack<mpz_class> factor_parts;
   for(vector<string>::iterator it = input_numbers.begin(); it != input_numbers.end(); ++it) {
     output_numbers.clear();
     mpz_input = *it;
+    factor_parts.push(mpz_input);
     ::untouched_input = *it;
     reset_globals();
 
-    //cout << "Running num: " << mpz_input <<  endl;
-    
+    while (!factor_parts.empty()) {
+      mpz_input = factor_parts.top();
+      factor_parts.pop();
+
+
+
     // ------------------------- STAGE 1 ----------------------
-    
-    // Is this already a prime?
-    if (mpz_probab_prime_p(mpz_input.get_mpz_t(), 20)) {
-      //cout << "STAGE 1 found factor: " << mpz_input <<  endl;
-      output_numbers.push_back(mpz_input);
-      mpz_input /= mpz_input;
-    }
 
-    // goto next loop if done factoring
-    if (mpz_input == 1) {
-      print_output(output_numbers);
-      continue;
-    }
-
-
+      // Is this already a prime?
+      if (mpz_probab_prime_p(mpz_input.get_mpz_t(), 20)) {
+        output_numbers.push_back(mpz_input);
+        continue;
+      }
 
     // ------------------------- STAGE 2 ----------------------
 
     // Factor using 19k prime list
-    int start_index, factor;
-    start_index = 0;
-    pair<int,int> res_pair;
-    while (start_index != prime_vector.size()) {
-      if (mpz_input == 1) {break;}
+      int start_index, factor;
+      start_index = 0;
+      pair<int,int> res_pair;
+      while (start_index != prime_vector.size()) {
+        if (mpz_input == 1) {break;}
       //cout << "start_index is: " << start_index << endl;
-      res_pair = factor_first_X_primes(mpz_input, start_index);
-      factor = res_pair.first;
-      mpz_input /= factor;
-      start_index = res_pair.second;
-      if (factor != 1){ output_numbers.push_back(factor); }
+        res_pair = factor_first_X_primes(mpz_input, start_index);
+        factor = res_pair.first;
+        mpz_input /= factor;
+        start_index = res_pair.second;
+        if (factor != 1){ output_numbers.push_back(factor); }
       //cout << "STAGE 2 found factor: " << factor <<  endl;
-    }
-
-    // goto next loop if done factoring
-    if (mpz_input == 1) {
-      print_output(output_numbers);
-      continue;
-    }
+      }
+      if (mpz_input == 1) {continue;} // goto next loop if done factoring
 
     // ------------------------- STAGE 3 ----------------------
 
     // Check for perfect forms/powers
-    mpz_class root;
-    for (int power = 2; power < 7; ++power) {
-      if ( perfect_form_test(mpz_input, power) ) {
-        mpz_root(root.get_mpz_t(), mpz_input.get_mpz_t(), power);
-        for (int i = 0; i < power; ++i) {
-          mpz_input /= root;
-          output_numbers.push_back(root);
+      mpz_class root;
+      bool found_perfect_power = false;
+      for (int power = 2; power < 7; ++power) {
+        if ( perfect_form_test(mpz_input, power) ) {
+          mpz_root(root.get_mpz_t(), mpz_input.get_mpz_t(), power);
+          for (int i = 0; i < power; ++i) {
+            mpz_input /= root;
+            factor_parts.push(root);
+            found_perfect_power = true;
           //cout << "STAGE 3 found factor: " << root <<  endl;
+          }
+          if (mpz_input == 1) {break;}
         }
-        if (mpz_input == 1) {break;}
       }
-    }
-
-    if (mpz_input == 1) {
-      print_output(output_numbers);
-      continue;
-    }
-
 
     // ------------------------- STAGE 4 ----------------------
     // Do qs here
 
-    
+
 
     // ------------------------- FAIL? ----------------------
 
     // Just print to check if we are correct (will print fail otherwise)
-     print_output(output_numbers);
+    }
+
+    print_output(output_numbers);
 
   }
 
@@ -163,7 +154,7 @@ bool multiply_output_check(vector<mpz_class> vec) {
     //cout << "Num is: " << num << "\n";
     temp *= *it;
   }
-    return (::untouched_input == temp) ? true : false;
+  return (::untouched_input == temp) ? true : false;
 }
 
 void print_output(vector<mpz_class> vec) {
