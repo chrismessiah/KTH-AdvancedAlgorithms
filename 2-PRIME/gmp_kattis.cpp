@@ -111,16 +111,12 @@ int main() {
         }
       }
 
-    // ------------------------- STAGE 4 ----------------------
-    // Do qs here
-
-
-
-    // ------------------------- FAIL? ----------------------
-
-    // Just print to check if we are correct (will print fail otherwise)
+      // ------------------------- STAGE 4 ----------------------
+      // Do qs here
+      
     }
 
+    // print after having gone through all parts
     print_output(output_numbers);
 
   }
