@@ -8,6 +8,8 @@
 
 #include <stdint.h>
 
+using namespace std;
+
 /**
  * A matrix of bits.
  *
@@ -17,7 +19,7 @@
  *
  * Matrix M(4, 4);
  * M(1, 1) = true;
- * std::cout << M << std::endl;
+ * cout << M << endl;
  *
  * Output:
  *
@@ -32,7 +34,7 @@ public:
     typedef uint64_t Block;
 
     // Number of bits per block.
-    const static uint32_t BitsPerBlock = std::numeric_limits<Block>::digits;
+    const static uint32_t BitsPerBlock = numeric_limits<Block>::digits;
 
     // Helper class to reference a single bit.
     //
@@ -77,7 +79,7 @@ public:
         m_matrix = new Block*[m_rows];
         for (uint32_t i = 0; i < m_rows; ++i) {
             m_matrix[i] = new Block[m_blocksPerRow];
-            std::fill(m_matrix[i], m_matrix[i] + m_blocksPerRow, 0);
+            fill(m_matrix[i], m_matrix[i] + m_blocksPerRow, 0);
         }
     }
 
@@ -96,8 +98,8 @@ public:
     }
 
     // Load matrix data from a string.
-    void load(const std::string &in) {
-        std::stringstream ss(in);
+    void load(const string &in) {
+        stringstream ss(in);
         for (uint32_t i = 0; i < m_rows; ++i) {
             for (uint32_t j = 0; j < m_cols; ++j) {
                 bool bit; ss >> bit;
@@ -135,12 +137,12 @@ public:
 
     // Swaps row i with row j.
     inline void swapRows(uint32_t i, uint32_t j) {
-        std::swap(m_matrix[i], m_matrix[j]);
+        swap(m_matrix[i], m_matrix[j]);
     }
 
     // Clears row i, setting all elements to 0.
     inline void clearRow(uint32_t i) {
-        std::fill(m_matrix[i], m_matrix[i] + m_blocksPerRow, 0);
+        fill(m_matrix[i], m_matrix[i] + m_blocksPerRow, 0);
     }
 
     // Reduces the matrix to row echelon form using Gaussian elimination.
@@ -174,10 +176,10 @@ public:
      * x to Ax = b. Matrix is assumed to have been reduced and the system to be
      * underdetermined.
      */
-    std::vector<uint32_t> solve() const {
+    vector<uint32_t> solve() const {
         Matrix M(*this); // Work on a copy.
 
-        std::vector<uint32_t> x(cols() - 1, 0);
+        vector<uint32_t> x(cols() - 1, 0);
         int32_t i = rows() - 1;
         while (i >= 0) {
             // Count the 1:s in the current row.
@@ -220,14 +222,14 @@ private:
 };
 
 // Output stream operator.
-std::ostream& operator<<(std::ostream& os, const Matrix &matrix)
+ostream& operator<<(ostream& os, const Matrix &matrix)
 {
     for (uint32_t i = 0; i < matrix.rows(); ++i) {
         for (uint32_t j = 0; j < matrix.cols(); ++j) {
-            os << std::left << std::setw(2) << matrix(i, j);
+            os << left << setw(2) << matrix(i, j);
         }
         if (i < matrix.rows() - 1)
-            os << std::endl;
+            os << endl;
     }
     return os;
 }
