@@ -6,8 +6,8 @@
 4. Run `make -j 3`
 5. Run `make -j 3 install`
 6. cd into the project folder of lab2
-7  Run `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib`
-8. compile `g++ gmp_test.cpp -lgmp -lgmpxx`
+7. Run `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib`
+8. compile `g++ gmp_test.cpp -lgmp -lgmpxx -std=c++11`
 9. Run `./a.out` and see if you get any errors, otherwise ur good to go
 
 # Troubleshooting
