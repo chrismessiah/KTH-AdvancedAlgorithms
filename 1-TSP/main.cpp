@@ -12,7 +12,7 @@
 //      2. Clarke-Wright heuristic
 //      3. K-opt (2 in our case)
 
-// compile with: g++ *.cpp
+// compile with: g++ main.cpp -std=c++11
 // Run with: ./a.out
 
 // Imports
