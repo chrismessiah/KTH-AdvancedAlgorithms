@@ -1,11 +1,5 @@
 
 #include "headers/pollard_rho.hpp"
-//#include "headers/brent_rho.hpp" // not working :(
-
-#include "headers/abs.hpp"
-#include "headers/gcd.hpp"
-#include "headers/min.hpp"
-#include "headers/random.hpp"
 
 #include <iostream>
 
