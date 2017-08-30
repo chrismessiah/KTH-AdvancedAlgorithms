@@ -81,7 +81,7 @@ void factor_this(mpz_class *num, vector<mpz_class> *output) {
     else {factor_this(&a, output);}
 
     a = (*num)/a;
-    
+
     if (mpz_probab_prime_p(a.get_mpz_t(), 20) >= 1) {(*output).push_back(a);}
     else {factor_this(&a, output);}
   }
