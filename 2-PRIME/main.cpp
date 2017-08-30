@@ -1,7 +1,31 @@
 
 /*
-* Compile:
-*   g++ gmp_test.cpp -lgmp -lgmpxx -std=c++11
+* Lab: Factoring - https://kth.kattis.com/problems/kth.avalg.factoring
+*
+* Authors
+*   Christian Abdelmassih
+*   Marcus Wallberg
+*
+* ********************* DOCUMENTATION *********************
+* Compile
+*   $ g++ main.cpp -lgmp -lgmpxx -std=c++11
+* Run
+*   $ ./a.out
+* ------------------------- GMP ----------------------------
+* The official GMP docs
+*   https://gmplib.org/manual/index.html#Top
+*
+* Creating variables
+*   Remember to instantize an mpz_class variable before assignment.
+*   For examle
+*      mpz_class x;
+*      x = "175891579187581657617";
+*
+* Using gmp(c) fucntions with gmpxx(c++) classes
+*   Remember to always get the mpz_t value when running c functions
+*   For example
+*      mpz_abs(x.get_mpz_t(), y.get_mpz_t());
+* ********************* DOCUMENTATION *********************
 */
 
 #include <gmp.h>
@@ -11,13 +35,10 @@
 
 using namespace std;
 
-//#include "brent_rho.hpp" // do not use. Not working
-//#include "wiki_rho.hpp" // copy of wikipedia rho algorithm. Something seems missing in it.
-#include "pollard_rho.hpp" // working version of pollard rho algorithm
+#include "pollard_rho.hpp"
 
-
-void factor_this(mpz_class *num, vector<mpz_class> *output);
-void factor_this_root(string *string_input, vector<mpz_class> *output);
+void factorize(mpz_class *num, vector<mpz_class> *output);
+void start_factoring(string *string_input, vector<mpz_class> *output);
 
 int main() {
   string string_input;
@@ -32,27 +53,26 @@ int main() {
     input.push_back("175891579187581657617");
     for(vector<string>::iterator it = input.begin(); it != input.end(); ++it) {
       string_input = *it;
-      factor_this_root(&string_input, &output);
+      start_factoring(&string_input, &output);
     }
   } else {
     while (true) {
       getline(cin, string_input);
       if (string_input.empty()) {break;}
-      factor_this_root(&string_input, &output);
+      start_factoring(&string_input, &output);
     }
   }
-
   return 0;
 }
 
-void factor_this_root(string *string_input, vector<mpz_class> *output) {
+void start_factoring(string *string_input, vector<mpz_class> *output) {
   mpz_class number;
   number = *string_input;
 
   // 2 = prime, 1 = likely prime, 0 = not prime
   if (mpz_probab_prime_p(number.get_mpz_t(), 20) >= 1) {cout << number << "\n\n"; return;}
 
-  factor_this(&number, output);
+  factorize(&number, output);
 
   // check for errors, failed to factor etc
   for(vector<mpz_class>::iterator it2 = (*output).begin(); it2 != (*output).end(); ++it2) {
@@ -66,7 +86,7 @@ void factor_this_root(string *string_input, vector<mpz_class> *output) {
   (*output).clear();
 }
 
-void factor_this(mpz_class *num, vector<mpz_class> *output) {
+void factorize(mpz_class *num, vector<mpz_class> *output) {
   mpz_class a;
   rho(num, &a);
   if (a == 0) {
@@ -78,11 +98,11 @@ void factor_this(mpz_class *num, vector<mpz_class> *output) {
   } else {
 
     if (mpz_probab_prime_p(a.get_mpz_t(), 20) >= 1) {(*output).push_back(a);}
-    else {factor_this(&a, output);}
+    else {factorize(&a, output);}
 
     a = (*num)/a;
 
     if (mpz_probab_prime_p(a.get_mpz_t(), 20) >= 1) {(*output).push_back(a);}
-    else {factor_this(&a, output);}
+    else {factorize(&a, output);}
   }
 }
