@@ -73,14 +73,14 @@ int main() {
 void start_factoring(mpz_class *number, vector<mpz_class> *output, gmp_randstate_t *state) {
 
   // 2 = prime, 1 = likely prime, 0 = not prime
-  if (mpz_probab_prime_p((*number).get_mpz_t(), 5) >= 1) {cout << *number << "\n\n"; return;}
+  if (mpz_probab_prime_p((*number).get_mpz_t(), 10) >= 1) {cout << *number << "\n\n"; return;}
 
   factorize(number, output, state);
 
   // check for errors, failed to factor etc
   for(vector<mpz_class>::iterator it2 = (*output).begin(); it2 != (*output).end(); ++it2) {
     // 2 = prime, 1 = likely prime, 0 = not prime
-    if ( *it2 == 0 || mpz_probab_prime_p((*it2).get_mpz_t(), 5) == 0) {cout << "fail" << "\n\n"; return;}
+    if ( *it2 == 0 || mpz_probab_prime_p((*it2).get_mpz_t(), 10) == 0) {cout << "fail" << "\n\n"; return;}
   }
 
   // print output
@@ -100,12 +100,12 @@ void factorize(mpz_class *num, vector<mpz_class> *output, gmp_randstate_t *state
     (*output).push_back(a);
   } else {
 
-    if (mpz_probab_prime_p(a.get_mpz_t(), 5) >= 1) {(*output).push_back(a);}
+    if (mpz_probab_prime_p(a.get_mpz_t(), 10) >= 1) {(*output).push_back(a);}
     else {factorize(&a, output, state);}
 
     a = (*num)/a;
 
-    if (mpz_probab_prime_p(a.get_mpz_t(), 5) >= 1) {(*output).push_back(a);}
+    if (mpz_probab_prime_p(a.get_mpz_t(), 10) >= 1) {(*output).push_back(a);}
     else {factorize(&a, output, state);}
   }
 }

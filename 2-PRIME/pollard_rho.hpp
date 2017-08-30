@@ -15,7 +15,7 @@ void rho(mpz_class *n, mpz_class *result, gmp_randstate_t *state) {
   y = x;
   mpz_urandomm(c.get_mpz_t(), *state, (*n).get_mpz_t()); // [1, N]
 
-  unsigned int count = 0, limit = 700000;
+  unsigned int count = 0, limit = 850000;
   while (d == 1) {
     if (count > limit) {*result = -1; return;} // failed to factor
 
