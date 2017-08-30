@@ -7,9 +7,6 @@ void rho(mpz_class *n, mpz_class *result) {
   if (*n == 2) {*result = 0; return;}
   if (*n % 2 == 0) {*result = 2; return;}
 
-  // gives memory limit exeptions on kattis. We may want to try it after removing some vars
-  //if (mpz_probab_prime_p((*n).get_mpz_t(), 20) >= 1) {*result = *n; return;}
-
   mpz_class x, y, d;
 
   x = 2;

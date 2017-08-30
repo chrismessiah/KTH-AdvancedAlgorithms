@@ -23,7 +23,7 @@ int main() {
   string string_input;
   vector<mpz_class> output;
 
-  bool kattis = false;
+  bool kattis = true;
   if (!kattis) {
     vector<string> input;
     input.push_back("20");
@@ -76,8 +76,13 @@ void factor_this(mpz_class *num, vector<mpz_class> *output) {
     a = 0;
     (*output).push_back(a);
   } else {
-    factor_this(&a, output);
+
+    if (mpz_probab_prime_p(a.get_mpz_t(), 20) >= 1) {(*output).push_back(a);}
+    else {factor_this(&a, output);}
+
     a = (*num)/a;
-    factor_this(&a, output);
+    
+    if (mpz_probab_prime_p(a.get_mpz_t(), 20) >= 1) {(*output).push_back(a);}
+    else {factor_this(&a, output);}
   }
 }
