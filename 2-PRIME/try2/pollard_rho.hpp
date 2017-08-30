@@ -18,9 +18,7 @@ void rho(mpz_class *n, mpz_class *result) {
   y = x;
   mpz_urandomm(c.get_mpz_t(), state, (*n).get_mpz_t()); // [1, N]
 
-  // limit 400k, 300k, and 200k gives same score but takes longer time so
-  // make sure to keep the number low for the sake of time.
-  unsigned int count = 0, limit = 200000;
+  unsigned int count = 0, limit = 700000;
   while (d == 1) {
     if (count > limit) {*result = -1; return;} // failed to factor
 
