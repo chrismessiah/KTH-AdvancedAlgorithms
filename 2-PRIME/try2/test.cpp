@@ -17,56 +17,53 @@ using namespace std;
 
 
 void factor_this(mpz_class *num, vector<mpz_class> *output);
+void factor_this_root(string *string_input, vector<mpz_class> *output);
 
 int main() {
   string string_input;
-  vector<string> input;
   vector<mpz_class> output;
 
-  bool kattis = true;
+  bool kattis = false;
   if (!kattis) {
+    vector<string> input;
     input.push_back("20");
     input.push_back("974069");
     input.push_back("4294967291");
     input.push_back("175891579187581657617");
+    for(vector<string>::iterator it = input.begin(); it != input.end(); ++it) {
+      string_input = *it;
+      factor_this_root(&string_input, &output);
+    }
   } else {
     while (true) {
       getline(cin, string_input);
       if (string_input.empty()) {break;}
-      input.push_back(string_input);
+      factor_this_root(&string_input, &output);
     }
   }
 
-  mpz_class number;
-  bool error;
-  for(vector<string>::iterator it = input.begin(); it != input.end(); ++it) {
-		number = *it;
-
-    if (mpz_probab_prime_p(number.get_mpz_t(), 20) >= 1) { // 2 = prime, 1 = likely prime, 0 = not prime
-      cout << number << "\n\n";
-      continue;
-    }
-
-    factor_this(&number, &output);
-
-    // check for errors, failed to factor etc
-    error = false;
-    for(vector<mpz_class>::iterator it2 = output.begin(); it2 != output.end(); ++it2) {
-      if ( *it2 == 0 || mpz_probab_prime_p((*it2).get_mpz_t(), 20) == 0) { // 2 = prime, 1 = likely prime, 0 = not prime
-        cout << "fail" << "\n\n";
-        error = true;
-        break;
-      }
-    }
-    if (error == true) {continue;}
-
-    // print output
-    for(vector<mpz_class>::iterator it2 = output.begin(); it2 != output.end(); ++it2) {cout << *it2  << "\n";}
-		cout << "\n";
-    output.clear();
-	}
-
   return 0;
+}
+
+void factor_this_root(string *string_input, vector<mpz_class> *output) {
+  mpz_class number;
+  number = *string_input;
+
+  // 2 = prime, 1 = likely prime, 0 = not prime
+  if (mpz_probab_prime_p(number.get_mpz_t(), 20) >= 1) {cout << number << "\n\n"; return;}
+
+  factor_this(&number, output);
+
+  // check for errors, failed to factor etc
+  for(vector<mpz_class>::iterator it2 = (*output).begin(); it2 != (*output).end(); ++it2) {
+    // 2 = prime, 1 = likely prime, 0 = not prime
+    if ( *it2 == 0 || mpz_probab_prime_p((*it2).get_mpz_t(), 20) == 0) {cout << "fail" << "\n\n"; return;}
+  }
+
+  // print output
+  for(vector<mpz_class>::iterator it2 = (*output).begin(); it2 != (*output).end(); ++it2) {cout << *it2  << "\n";}
+  cout << "\n";
+  (*output).clear();
 }
 
 void factor_this(mpz_class *num, vector<mpz_class> *output) {
