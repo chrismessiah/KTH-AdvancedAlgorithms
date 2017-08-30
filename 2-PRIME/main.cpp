@@ -1,7 +1,7 @@
 // Factoring
 // https://kth.kattis.com/problems/kth.avalg.factoring
 
-// Authors 
+// Authors
 // Christian Abdelmassih
 // Marcus Wallberg
 

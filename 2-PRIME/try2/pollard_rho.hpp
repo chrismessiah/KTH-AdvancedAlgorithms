@@ -6,7 +6,6 @@ void rho(mpz_class *n, mpz_class *result);
 void rho(mpz_class *n, mpz_class *result) {
   if (*n == 2) {*result = 0; return;}
   if (*n % 2 == 0) {*result = 2; return;}
-  if (false) {*result = -1; return;} // cannot factor number
   mpz_class x, y, d, diff, two;
 
   two = 2;
@@ -17,7 +16,8 @@ void rho(mpz_class *n, mpz_class *result) {
   mpz_mod(diff.get_mpz_t(), (*n).get_mpz_t(), two.get_mpz_t());
   if (diff == 0) {*result = 2; return;}
 
-  unsigned int count = 0, limit = 100000;
+  // limit 400k, 300k, and 200k gives same score but takes longer time
+  unsigned int count = 0, limit = 200000;
   while (d == 1) {
     if (count > limit) {*result = -1; return;} // failed to factor
 

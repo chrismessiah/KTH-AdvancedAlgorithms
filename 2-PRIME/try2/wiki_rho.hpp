@@ -1,8 +1,11 @@
 #ifndef RHO
 #define RHO
 
-// this rho function is a modified copy of the C-version available on wikipedia
-// since it is different from the origial algorithm I though one should test both
+/*
+* this rho function is a modified copy of the C-version available on wikipedia
+* since it is different from the origial algorithm I though one should test both
+* and compare the results regarding speed and precision.
+*/
 
 void rho(mpz_class *n, mpz_class *result);
 
