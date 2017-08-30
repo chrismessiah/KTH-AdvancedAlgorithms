@@ -5,6 +5,7 @@ void rho(mpz_class *n, mpz_class *result);
 
 void rho(mpz_class *n, mpz_class *result) {
   if (*n == 2) {*result = 0; return;}
+  if (*n % 2 == 0) {*result = 2; return;}
   if (false) {*result = -1; return;} // cannot factor number
   mpz_class x, y, d, diff, two;
 

@@ -11,7 +11,9 @@
 
 using namespace std;
 
+//#include "brent_rho.hpp" // do not use. Not working
 #include "pollard_rho.hpp"
+//#include "sample_rho.hpp"
 
 
 void factor_this(mpz_class *num, vector<unsigned long> *output);
