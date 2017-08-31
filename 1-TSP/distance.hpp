@@ -1,5 +1,6 @@
 #ifndef DISTANCE
 #define DISTANCE
+#include <math.h>
 
 void distance(long * result, Point * p1, Point * p2);
 
