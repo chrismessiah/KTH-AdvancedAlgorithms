@@ -5,7 +5,7 @@
 *   Christian Abdelmassih
 *   Marcus Wallberg
 *
-* Compile with   g++ main2.cpp -std=c++11
+* Compile with   g++ main.cpp -std=c++11
 */
 
 #include <iostream>
