@@ -2,10 +2,10 @@
 #define DISTANCE
 #include <math.h>
 
-void distance(long * result, Point * p1, Point * p2);
+long distance(double * x1, double * x2, double * y1, double * y2);
 
-void distance(long * result, Point * p1, Point * p2) {
-  *result = round(sqrt( ((*p1).x-(*p2).x)*((*p1).x-(*p2).x) + ((*p1).y-(*p2).y)*((*p1).y-(*p2).y) ));
+long distance(double * x1, double * x2, double * y1, double * y2) {
+  return round(sqrt( ( ((*x1) - (*x2)) * ((*x1) - (*x2)) ) + ( ((*y1) - (*y2)) * ((*y1) - (*y2)) ) ));
 }
 
 #endif

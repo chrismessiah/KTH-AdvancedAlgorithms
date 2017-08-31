@@ -13,31 +13,27 @@
 
 using namespace std;
 
-#include "point.hpp"
 #include "distance.hpp"
 #include "inputs.hpp"
 
 int main() {
   bool kattis = false;
   short inputLength;
-  string stringInput;
 
-  if (!kattis) {
-    inputLength = 10;
-    vector<string> vec;
-    get_test_input(&vec);
-    for(vector<string>::iterator it = vec.begin(); it != vec.end(); ++it) {
-      stringInput = *it;
-      Point point(&stringInput);
-      // store the point somehow here
-    }
-  } else {
-    cin >> inputLength;
-    for (short i = 0; i < inputLength; i++) {
-      getline(cin, stringInput);
-      Point point(&stringInput);
-      // store the point somehow here
-    }
+  if (kattis) { cin >> inputLength; }
+  else {inputLength = get_test_input_length();}
+
+  vector<double> x(inputLength);
+  vector<double> y(inputLength);
+
+  if (kattis) {for (short i = 0; i < inputLength; i++) { cin >> x[i] >> y[i];}}
+  else {get_test_input(&x, &y);}
+
+  // change this to store the distance instead in some type of datastructure
+  long dist;
+  for (short i = 1; i < inputLength; i++) {
+    dist = distance( &(x[i]), &(x[i-1]), &(y[i]), &(x[i-1]) );
+    cout << dist << "\n";
   }
   return 0;
 }
