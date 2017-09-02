@@ -3,15 +3,15 @@
 
 class Point {
   public:
-    double x;
-    double y;
-    Point(string * input);
+    double x, y;
+    Point(string input);
+
 };
 
-Point::Point(string * input) {
-  string::size_type sz;
-  x = stod(*input, &sz);
-  y = stod( (*input).substr(sz) );
+Point::Point(string input) {
+  std::string::size_type sz;
+  x = std::stod (input, &sz);
+  y = std::stod (input.substr(sz));
 }
 
 #endif

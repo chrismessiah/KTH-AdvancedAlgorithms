@@ -14,28 +14,32 @@
 using namespace std;
 
 #include "point.hpp"
+#include "greedy.cpp"
 #include "distance.hpp"
 #include "inputs.hpp"
+#include "cost.cpp"
+typedef vector<Point> pointVector;
 
 int main() {
   bool kattis = false;
-  short inputLength;
+  int inputLength;
   string stringInput;
 
   if (!kattis) {
     inputLength = 10;
-    vector<string> vec;
-    get_test_input(&vec);
-    for(vector<string>::iterator it = vec.begin(); it != vec.end(); ++it) {
-      stringInput = *it;
-      Point point(&stringInput);
-      // store the point somehow here
-    }
+    vector<int> tour(inputLength);
+    vector<Point> points;
+    get_test_input(&points);
+
+    greedy(points, &tour, inputLength);
+
+    cout << cost(points, tour) << endl;
+
   } else {
     cin >> inputLength;
     for (short i = 0; i < inputLength; i++) {
       getline(cin, stringInput);
-      Point point(&stringInput);
+      // Point point(&stringInput);
       // store the point somehow here
     }
   }
