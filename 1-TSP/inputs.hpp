@@ -1,7 +1,7 @@
 #ifndef INPUTS
 #define INPUTS
 
-void get_test_input(vector<Point> *input);
+// void get_test_input(vector<Point> *input);
 
 // void get_test_input(vector<string> * input) {
 //   (*input).push_back("95.0129 61.5432");
