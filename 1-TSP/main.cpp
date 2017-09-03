@@ -14,7 +14,7 @@
 
 using namespace std;
 
-#include "helpers.hpp"
+#include "matrix.hpp"
 #include "test_input.hpp"
 
 int kattis;
@@ -32,18 +32,13 @@ int main() {
   else {get_test_input(&x, &y);}
 
   // convert inputs to distance matrix
-  long dMatrix[inputLength*inputLength];
-
-  // set all values to 0, for testing purposes
-  if (!kattis) {for (short i = 0; i < inputLength; i++) {for (short j = 0; j < inputLength; j++) {dMatrix[inputLength*i + j] = 0;}}}
-
-  // insert data values
+  Matrix dMatrix(inputLength);
   for (short i = 0; i < inputLength; i++) {
     for (short j = i+1; j < inputLength; j++) {
-      dMatrix[inputLength*i + j] = dMatrix[inputLength*j + i] = round(sqrt( ((x[i]-x[j])*(x[i]-x[j])) + ((y[i]-y[j])*(y[i]-y[j])) ));
+      dMatrix.setSymmetrical(i,j, round(sqrt( ((x[i]-x[j])*(x[i]-x[j])) + ((y[i]-y[j])*(y[i]-y[j])) )));
     }
   }
-
-  print_matrix(inputLength, dMatrix);
+  dMatrix.print();
+  
   return 0;
 }
