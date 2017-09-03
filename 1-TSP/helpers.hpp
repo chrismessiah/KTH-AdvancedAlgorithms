@@ -23,4 +23,16 @@ void print_tour(vector<short> (*tour)) {
   }
 }
 
+void print_tour_cost(vector<short> (*tour), Matrix& dMatrix, string label) {
+  if (kattis) {return;}
+  short r, c;
+  long sum = 0;
+  for (short i = 0; i <= inputLength; i++) {
+    r = (*tour)[i];
+    c = (i+1 == inputLength) ? (*tour)[0] : (*tour)[i+1];
+    sum += dMatrix.get(r, c);
+  }
+  cout << "Tour: " << label << "	Cost: " << sum << endl;
+}
+
 #endif

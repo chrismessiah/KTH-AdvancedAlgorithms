@@ -30,12 +30,16 @@ int main() {
   get_data(dMatrix); // convert inputs to distance matrix
 
   // we can print the distance matrix for debugging purposes. If kattis is true
-  // this shows nothing. 
+  // this shows nothing.
   dMatrix.print();
 
   vector<short> tour(inputLength);
   greedy(&tour, dMatrix);
 
+  // prints the total tour cost. To be used for debugging purposes
+  print_tour_cost(&tour, dMatrix, "Greedy");
+
+  // the kattis-tour outputter.
   print_tour(&tour);
 
   return 0;
