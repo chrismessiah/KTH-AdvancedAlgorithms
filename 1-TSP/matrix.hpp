@@ -40,6 +40,7 @@ void Matrix::setSymmetrical(short r, short c, long value) {
 }
 
 void Matrix::print() {
+  if (kattis) { return; }
   string out = "";
   string numString;
   stringstream ss;
@@ -50,9 +51,10 @@ void Matrix::print() {
       ss.str("");
       out = out + numString + "	";
     }
-    cout << out << "\n";
+    cout << out << endl;
     out = "";
   }
+  cout << endl;
 }
 
 #endif

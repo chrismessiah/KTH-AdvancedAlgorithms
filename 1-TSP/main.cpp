@@ -20,14 +20,23 @@ short inputLength;
 #include "matrix.hpp"
 #include "test_input.hpp"
 #include "helpers.hpp"
+#include "greedy.hpp"
 
 int main() {
   if (kattis) { cin >> inputLength; }
-  else { inputLength = get_test_input_length(); }
+  else { inputLength = get_test_input_length(); cout << endl << "DEBUG-MODE ACTIVE" << endl << endl;}
 
   Matrix dMatrix(inputLength);
   get_data(dMatrix); // convert inputs to distance matrix
+
+  // we can print the distance matrix for debugging purposes. If kattis is true
+  // this shows nothing. 
   dMatrix.print();
+
+  vector<short> tour(inputLength);
+  greedy(&tour, dMatrix);
+
+  print_tour(&tour);
 
   return 0;
 }
