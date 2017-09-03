@@ -10,30 +10,33 @@
 
 #include <iostream>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
-#include "distance.hpp"
-#include "inputs.hpp"
+bool kattis = false;
+short inputLength;
+
+#include "matrix.hpp"
+#include "test_input.hpp"
+#include "helpers.hpp"
+#include "greedy.hpp"
 
 int main() {
-  bool kattis = false;
-  short inputLength;
-
   if (kattis) { cin >> inputLength; }
-  else {inputLength = get_test_input_length();}
+  else { inputLength = get_test_input_length(); cout << endl << "DEBUG-MODE ACTIVE" << endl << endl;}
 
-  vector<double> x(inputLength);
-  vector<double> y(inputLength);
+  Matrix dMatrix(inputLength);
+  get_data(dMatrix); // convert inputs to distance matrix
 
-  if (kattis) {for (short i = 0; i < inputLength; i++) { cin >> x[i] >> y[i];}}
-  else {get_test_input(&x, &y);}
+  // we can print the distance matrix for debugging purposes. If kattis is true
+  // this shows nothing. 
+  dMatrix.print();
 
-  // change this to store the distance instead in some type of datastructure
-  long dist;
-  for (short i = 1; i < inputLength; i++) {
-    dist = distance( &(x[i]), &(x[i-1]), &(y[i]), &(x[i-1]) );
-    cout << dist << "\n";
-  }
+  vector<short> tour(inputLength);
+  greedy(&tour, dMatrix);
+
+  print_tour(&tour);
+
   return 0;
 }
