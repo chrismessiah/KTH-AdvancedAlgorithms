@@ -5,7 +5,6 @@ class Point {
   public:
     double x, y;
     Point(string input);
-
 };
 
 Point::Point(string input) {

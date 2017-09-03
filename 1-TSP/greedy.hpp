@@ -16,8 +16,6 @@
 #include "point.hpp"
 using namespace std;
 
-void greedy(vector<Point> input, vector<int> (*tour), int n);
-
 void greedy(vector<Point> input, vector<int> (*tour), int n) {
   vector<bool> used(n);
 
