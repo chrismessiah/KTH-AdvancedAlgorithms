@@ -6,17 +6,25 @@
 
 class Matrix {
   public:
+    Matrix();
     Matrix(short length);
     void set(short r, short c, long value);
     void setSymmetrical(short r, short c, long value);
     long get(short r, short c);
     void print();
+    void resize(short length);
   private:
     vector<long> array;
     short length;
 };
 
+Matrix::Matrix() {}
+
 Matrix::Matrix(short length) {
+  resize(length);
+}
+
+void Matrix::resize(short length) {
   this->length = length;
   array.resize(length*length);
   for (short i = 0; i < length; i++) {
@@ -25,7 +33,6 @@ Matrix::Matrix(short length) {
     }
   }
 }
-
 long Matrix::get(short r, short c) {
   return array[length*r + c];
 }

@@ -2,9 +2,9 @@
 #define HELPERS
 
 void get_data(Matrix& dMatrix);
-long get_tour_cost(vector<short> (*tour), Matrix& dMatrix);
-void create_random_tour(vector<short> (*tour));
-void create_tour(vector<short> (*tour));
+long get_tour_cost(vector<short>& tour);
+//void create_random_tour(vector<short>& tour);
+void create_tour(vector<short>& tour);
 
 // gets input data and converts it to distance, stores it in matrix
 void get_data(Matrix& dMatrix) {
@@ -20,34 +20,36 @@ void get_data(Matrix& dMatrix) {
   }
 }
 
-void print_tour(vector<short> (*tour)) {
+void print_tour(vector<short>& tour) {
   for (short i = 0; i < inputLength; i++) {
-    cout << (*tour)[i] << endl;
+    cout << tour[i] << endl;
   }
 }
 
-void print_tour_cost(vector<short> (*tour), Matrix& dMatrix, string label) {
+void print_tour_cost(vector<short>& tour, string label) {
   if (kattis) {return;}
-  long cost = get_tour_cost(tour, dMatrix);
+  long cost = get_tour_cost(tour);
   cout << "Tour: " << label << "	Cost: " << cost << endl;
 }
 
-long get_tour_cost(vector<short> (*tour), Matrix& dMatrix) {
+long get_tour_cost(vector<short>& tour) {
   long sum = 0;
-  for (short i = 0; i < inputLength; i++) {
-    sum += dMatrix.get((*tour)[i], (*tour)[i+1]);
+  for (short i = 0; i < inputLength-1; i++) {
+    sum += dMatrix.get(tour[i], tour[i+1]);
   }
-  sum += dMatrix.get((*tour)[inputLength-1], (*tour)[0]);
+  sum += dMatrix.get(tour[inputLength-1], tour[0]);
   return sum;
 }
 
-void create_tour(vector<short> (*tour)) {
-  iota((*tour).begin(), (*tour).end(), 0);
+void create_tour(vector<short>& tour) {
+  for (short i = 0; i < inputLength; i++) {
+    tour[i] = i;
+  }
 }
 
-void create_random_tour(vector<short> (*tour)) {
-  create_tour(tour);
-  shuffle(begin((*tour)), end((*tour)), rng);
-}
+// void create_random_tour(vector<short>& tour) {
+//   create_tour(tour);
+//   shuffle(begin(tour), end(tour), rng);
+// }
 
 #endif

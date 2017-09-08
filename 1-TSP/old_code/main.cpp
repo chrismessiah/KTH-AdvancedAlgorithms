@@ -1,7 +1,7 @@
 // Travelling Salesperson 2D
 // https://kth.kattis.com/problems/tsp
 
-// Authors 
+// Authors
 // Christian Abdelmassih
 // Marcus Wallberg
 
@@ -55,7 +55,7 @@ int main() {
     getInput();
 
     if (!::kattis) {
-        
+
         cout << "\nTour 1: \n";
         greedyTour();
         printRunTime();
@@ -103,7 +103,7 @@ void getInput() {
     }
 
     cin >> ::n;
-    
+
     // set size of vector
     ::coordinates.resize(::n);
     for (int i = 0; i < ::n; ++i) {
@@ -124,9 +124,9 @@ void twoOptTourTimer() {
     greedyTour();
     double bestDistance = calculateTotalTourCost();
     double swapResultCost;
-    
+
     while (true) {
-        for (int i = 0; i < ::n-1; i++) { // loop through all nodes except last 
+        for (int i = 0; i < ::n-1; i++) { // loop through all nodes except last
             for (int j = i+1; j < ::n; j++) { // loop through all nodes after node tour[i]
                 swapResultCost = calculateMultipleNodeCost(i,j);
                 nodeSwap(i, j);
@@ -152,11 +152,11 @@ void twoOptTour() {
     greedyTour();
     double bestDistance = calculateTotalTourCost();
     double swapResultCost;
-    
+
     int count = 0;
     while (count < thresh) {
 
-        for (int i = 0; i < ::n-1; i++) { // loop through all nodes except last 
+        for (int i = 0; i < ::n-1; i++) { // loop through all nodes except last
             for (int j = i+1; j < ::n; j++) { // loop through all nodes after node tour[i]
                 swapResultCost = calculateMultipleNodeCost(i,j);
                 nodeSwap(i, j);
@@ -221,7 +221,7 @@ void loadTestValues() {
     ::coordinates[9][1] = 89.3650;
 }
 
-// REMEMBER 
+// REMEMBER
 // SHUFFLE uses tour as SEED unless explicitly defined !!!!!!!!!!!
 void getRandomTour() {
     ::tour.resize(::n);
