@@ -34,10 +34,10 @@ void print_tour_cost(vector<short> (*tour), Matrix& dMatrix, string label) {
 
 long get_tour_cost(vector<short> (*tour), Matrix& dMatrix) {
   long sum = 0;
-  for (short i = 0; i <= inputLength; i++) {
-    if ((i+1) == inputLength) { sum += dMatrix.get((*tour)[i], (*tour)[0]); }
-    else { sum += dMatrix.get((*tour)[i], (*tour)[i+1]); }
+  for (short i = 0; i < inputLength; i++) {
+    sum += dMatrix.get((*tour)[i], (*tour)[i+1]);
   }
+  sum += dMatrix.get((*tour)[inputLength-1], (*tour)[0]);
   return sum;
 }
 

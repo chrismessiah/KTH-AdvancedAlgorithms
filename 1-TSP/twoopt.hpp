@@ -17,7 +17,7 @@ void twoopt(vector<short> (*best_tour), Matrix& dMatrix) {
       for (int k = i+1; k < inputLength; k++) {
         swap(&tour, &i, &k);
         distance = get_tour_cost(&tour, dMatrix);
-        if (distance < best_distance) { // debug
+        if (distance < best_distance) {
           improve = 0;
           (*best_tour) = tour;
           best_distance = distance;
