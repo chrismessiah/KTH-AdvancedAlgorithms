@@ -50,4 +50,10 @@ void create_random_tour(vector<short> (*tour)) {
   shuffle(begin((*tour)), end((*tour)), rng);
 }
 
+bool exit_time_reached(double time_limit) {
+  chrono::high_resolution_clock::time_point nowTime = chrono::high_resolution_clock::now();
+  chrono::duration<double> time_span = chrono::duration_cast<chrono::duration<double>>(nowTime - startTime);
+  return (time_span.count() >= time_limit) ? true : false;
+}
+
 #endif

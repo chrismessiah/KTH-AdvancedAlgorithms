@@ -1,12 +1,10 @@
 #ifndef TWOOPT
 #define TWOOPT
 
-// This 2opt is not working due to segmentation errors!
-
 void swap(vector<short> (*tour), int * i, int * k);
 
 void twoopt(vector<short> (*best_tour), Matrix& dMatrix) {
-  create_random_tour(best_tour);
+  greedy(best_tour, dMatrix);
   vector<short> tour = (*best_tour);
 
   short improve = 0;
@@ -15,6 +13,7 @@ void twoopt(vector<short> (*best_tour), Matrix& dMatrix) {
     best_distance = get_tour_cost(best_tour, dMatrix);
     for (int i = 0; i < inputLength; i++) {
       for (int k = i+1; k < inputLength; k++) {
+        if (exit_time_reached(1.9)) {return;}
         swap(&tour, &i, &k);
         distance = get_tour_cost(&tour, dMatrix);
         if (distance < best_distance) {
