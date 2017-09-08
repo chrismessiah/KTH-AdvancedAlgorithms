@@ -2,6 +2,9 @@
 #define HELPERS
 
 void get_data(Matrix& dMatrix);
+long get_tour_cost(vector<short> (*tour), Matrix& dMatrix);
+void create_random_tour(vector<short> (*tour));
+void create_tour(vector<short> (*tour));
 
 // gets input data and converts it to distance, stores it in matrix
 void get_data(Matrix& dMatrix) {
@@ -25,14 +28,26 @@ void print_tour(vector<short> (*tour)) {
 
 void print_tour_cost(vector<short> (*tour), Matrix& dMatrix, string label) {
   if (kattis) {return;}
-  short r, c;
+  long cost = get_tour_cost(tour, dMatrix);
+  cout << "Tour: " << label << "	Cost: " << cost << endl;
+}
+
+long get_tour_cost(vector<short> (*tour), Matrix& dMatrix) {
   long sum = 0;
   for (short i = 0; i <= inputLength; i++) {
-    r = (*tour)[i];
-    c = (i+1 == inputLength) ? (*tour)[0] : (*tour)[i+1];
-    sum += dMatrix.get(r, c);
+    if ((i+1) == inputLength) { sum += dMatrix.get((*tour)[i], (*tour)[0]); }
+    else { sum += dMatrix.get((*tour)[i], (*tour)[i+1]); }
   }
-  cout << "Tour: " << label << "	Cost: " << sum << endl;
+  return sum;
+}
+
+void create_tour(vector<short> (*tour)) {
+  iota((*tour).begin(), (*tour).end(), 0);
+}
+
+void create_random_tour(vector<short> (*tour)) {
+  create_tour(tour);
+  shuffle(begin((*tour)), end((*tour)), rng);
 }
 
 #endif

@@ -12,13 +12,13 @@ class Matrix {
     long get(short r, short c);
     void print();
   private:
-    long* array;
+    vector<long> array;
     short length;
 };
 
 Matrix::Matrix(short length) {
   this->length = length;
-  array = new long[length*length];
+  array.resize(length*length);
   for (short i = 0; i < length; i++) {
     for (short j = 0; j < length; j++) {
       array[i*length + j] = 0;
