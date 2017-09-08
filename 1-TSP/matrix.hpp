@@ -1,12 +1,15 @@
 #ifndef MATRIX
 #define MATRIX
 
+#include <vector>
 #include <iostream>
 #include <sstream> // cast numbers to strings
 
 class Matrix {
   public:
+    Matrix();
     Matrix(short length);
+    void resize(short length);
     void set(short r, short c, long value);
     void setSymmetrical(short r, short c, long value);
     long get(short r, short c);
@@ -16,7 +19,13 @@ class Matrix {
     short length;
 };
 
+Matrix::Matrix() {}
+
 Matrix::Matrix(short length) {
+  resize(length*length);
+}
+
+void Matrix::resize(short length) {
   this->length = length;
   array.resize(length*length);
   for (short i = 0; i < length; i++) {

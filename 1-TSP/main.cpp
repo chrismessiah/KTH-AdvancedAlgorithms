@@ -24,10 +24,13 @@ default_random_engine rng;
 chrono::high_resolution_clock::time_point startTime;
 
 #include "matrix.hpp"
+Matrix dMatrix;
+
 #include "test_input.hpp"
 #include "helpers.hpp"
 #include "greedy.hpp"
 #include "twoopt.hpp"
+
 
 int main() {
   startTime = chrono::high_resolution_clock::now();
@@ -37,8 +40,8 @@ int main() {
   if (kattis) { cin >> inputLength; }
   else { inputLength = get_test_input_length(); cout << endl << "DEBUG-MODE ACTIVE" << endl << endl;}
 
-  Matrix dMatrix(inputLength);
-  get_data(dMatrix); // convert inputs to distance matrix
+  dMatrix.resize(inputLength);
+  get_data(); // convert inputs to distance matrix
 
   // we can print the distance matrix for debugging purposes. If kattis is true
   // this shows nothing.
@@ -52,7 +55,7 @@ int main() {
   // greedy(&tour, dMatrix);
   // print_tour_cost(&tour, dMatrix, "Greedy");
 
-  twoopt(&tour, dMatrix);
+  twoopt(&tour);
   //print_tour_cost(&tour, dMatrix, "2-Opt");
 
   // the kattis-tour outputter.

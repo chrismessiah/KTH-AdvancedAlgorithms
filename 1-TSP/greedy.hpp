@@ -1,7 +1,7 @@
 #ifndef GREEDY
 #define GREEDY
 
-void greedy(vector<short> (*tour), Matrix& dMatrix) {
+void greedy(vector<short> (*tour)) {
   vector<bool> used(inputLength);
 
   short best;
