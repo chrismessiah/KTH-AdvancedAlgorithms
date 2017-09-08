@@ -10,19 +10,30 @@
 
 #include <iostream>
 #include <vector>
+#include <random>
+#include <algorithm>
+#include <ctime>
 #include <math.h>
+#include <chrono>
 
 using namespace std;
 
-bool kattis = false;
+bool kattis = true;
 short inputLength;
+default_random_engine rng;
+chrono::high_resolution_clock::time_point startTime;
 
 #include "matrix.hpp"
 #include "test_input.hpp"
 #include "helpers.hpp"
 #include "greedy.hpp"
+#include "twoopt.hpp"
 
 int main() {
+  startTime = chrono::high_resolution_clock::now();
+  srand(time(NULL));
+  rng = default_random_engine {};
+
   if (kattis) { cin >> inputLength; }
   else { inputLength = get_test_input_length(); cout << endl << "DEBUG-MODE ACTIVE" << endl << endl;}
 
@@ -31,13 +42,18 @@ int main() {
 
   // we can print the distance matrix for debugging purposes. If kattis is true
   // this shows nothing.
-  dMatrix.print();
+  // dMatrix.print();
 
   vector<short> tour(inputLength);
-  greedy(&tour, dMatrix);
 
-  // prints the total tour cost. To be used for debugging purposes
-  print_tour_cost(&tour, dMatrix, "Greedy");
+  // create_random_tour(&tour);
+  // print_tour_cost(&tour, dMatrix, "Random");
+  //
+  // greedy(&tour, dMatrix);
+  // print_tour_cost(&tour, dMatrix, "Greedy");
+
+  twoopt(&tour, dMatrix);
+  //print_tour_cost(&tour, dMatrix, "2-Opt");
 
   // the kattis-tour outputter.
   print_tour(&tour);

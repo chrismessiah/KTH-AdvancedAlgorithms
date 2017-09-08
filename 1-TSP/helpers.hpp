@@ -2,6 +2,9 @@
 #define HELPERS
 
 void get_data(Matrix& dMatrix);
+long get_tour_cost(vector<short> (*tour), Matrix& dMatrix);
+void create_random_tour(vector<short> (*tour));
+void create_tour(vector<short> (*tour));
 
 // gets input data and converts it to distance, stores it in matrix
 void get_data(Matrix& dMatrix) {
@@ -25,14 +28,32 @@ void print_tour(vector<short> (*tour)) {
 
 void print_tour_cost(vector<short> (*tour), Matrix& dMatrix, string label) {
   if (kattis) {return;}
-  short r, c;
+  long cost = get_tour_cost(tour, dMatrix);
+  cout << "Tour: " << label << "	Cost: " << cost << endl;
+}
+
+long get_tour_cost(vector<short> (*tour), Matrix& dMatrix) {
   long sum = 0;
-  for (short i = 0; i <= inputLength; i++) {
-    r = (*tour)[i];
-    c = (i+1 == inputLength) ? (*tour)[0] : (*tour)[i+1];
-    sum += dMatrix.get(r, c);
+  for (short i = 0; i < inputLength-1; i++) {
+    sum += dMatrix.get((*tour)[i], (*tour)[i+1]);
   }
-  cout << "Tour: " << label << "	Cost: " << sum << endl;
+  sum += dMatrix.get((*tour)[inputLength-1], (*tour)[0]);
+  return sum;
+}
+
+void create_tour(vector<short> (*tour)) {
+  iota((*tour).begin(), (*tour).end(), 0);
+}
+
+void create_random_tour(vector<short> (*tour)) {
+  create_tour(tour);
+  shuffle(begin((*tour)), end((*tour)), rng);
+}
+
+bool exit_time_reached(double time_limit) {
+  chrono::high_resolution_clock::time_point nowTime = chrono::high_resolution_clock::now();
+  chrono::duration<double> time_span = chrono::duration_cast<chrono::duration<double>>(nowTime - startTime);
+  return (time_span.count() >= time_limit) ? true : false;
 }
 
 #endif
