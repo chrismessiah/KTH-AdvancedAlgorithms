@@ -5,7 +5,7 @@ void get_data(Matrix& dMatrix);
 long get_tour_cost(vector<short> (*tour), Matrix& dMatrix, bool printing);
 void create_random_tour(vector<short> (*tour));
 void create_tour(vector<short> (*tour));
-bool exit_time_reached(double time_limit);
+bool exit_time_reached();
 
 // gets input data and converts it to distance, stores it in matrix
 void get_data(Matrix& dMatrix) {
@@ -36,7 +36,7 @@ void print_tour_cost(vector<short> (*tour), Matrix& dMatrix, string label) {
 long get_tour_cost(vector<short> (*tour), Matrix& dMatrix, bool printing) {
   long sum = 0;
   for (short i = 0; i < inputLength-1; i++) {
-    if (!printing && exit_time_reached(1.9)) {return 99999999;}
+    if (!printing && exit_time_reached()) {return 99999999;}
     sum += dMatrix.get((*tour)[i], (*tour)[i+1]);
   }
   sum += dMatrix.get((*tour)[inputLength-1], (*tour)[0]);
@@ -52,10 +52,10 @@ void create_random_tour(vector<short> (*tour)) {
   shuffle(begin((*tour)), end((*tour)), rng);
 }
 
-bool exit_time_reached(double time_limit) {
+bool exit_time_reached() {
   chrono::high_resolution_clock::time_point nowTime = chrono::high_resolution_clock::now();
   chrono::duration<double> time_span = chrono::duration_cast<chrono::duration<double>>(nowTime - startTime);
-  return (time_span.count() >= time_limit) ? true : false;
+  return (time_span.count() >= final_time_limit) ? true : false;
 }
 
 #endif

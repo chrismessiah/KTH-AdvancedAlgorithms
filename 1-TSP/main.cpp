@@ -20,6 +20,7 @@ using namespace std;
 
 bool kattis = false;
 short inputLength;
+float final_time_limit = 1.95; // sec
 default_random_engine rng;
 chrono::high_resolution_clock::time_point startTime;
 

@@ -22,10 +22,10 @@ void twoopt(vector<short> (*best_tour), Matrix& dMatrix) {
   while (improve) {
     improve = false;
     GOTO_WHILE:
-      if (exit_time_reached(1.9)) {return;}
+      if (exit_time_reached()) {return;}
       for (short i = 0; i < inputLength; i++) {
         for (short k = i+1; k < inputLength; k++) {
-          if (exit_time_reached(1.9)) {return;}
+          if (exit_time_reached()) {return;}
 
           distance = get_2node_cost(&tour, dMatrix, i, k);
           reverse(&tour, i, k);
