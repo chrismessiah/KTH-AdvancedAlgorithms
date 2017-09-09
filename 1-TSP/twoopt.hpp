@@ -3,6 +3,7 @@
 
 void swap(vector<short> (*tour), short m, short n);
 long get_2node_cost(vector<short> (*tour), Matrix& dMatrix, short m, short n);
+void reverse(vector<short> (*tour), short from, short to);
 
 void twoopt(vector<short> (*best_tour), Matrix& dMatrix) {
   greedy(best_tour, dMatrix);
@@ -10,7 +11,10 @@ void twoopt(vector<short> (*best_tour), Matrix& dMatrix) {
 
   long distance;
   long best_distance = get_tour_cost(best_tour, dMatrix, false);
-  while (true) {
+
+  bool improve = true;
+  while (improve) {
+    improve = false;
     if (exit_time_reached(1.9)) {return;}
     for (short i = 0; i < inputLength; i++) {
       for (short k = i+1; k < inputLength; k++) {
@@ -21,6 +25,7 @@ void twoopt(vector<short> (*best_tour), Matrix& dMatrix) {
         distance -= get_2node_cost(&tour, dMatrix, i, k);
 
         if (distance > 0) {
+          improve = true;
           swap(best_tour, i, k); // apply the change to our best tour
           best_distance -= distance;
         } else {
@@ -28,6 +33,14 @@ void twoopt(vector<short> (*best_tour), Matrix& dMatrix) {
         }
       }
     }
+  }
+}
+
+void reverse(vector<short> (*tour), short from, short to) {
+  vector<short> newTour = (*tour);
+  int diff = to-from;
+  for (int l = 0; l <= diff; l++) {
+    (*tour)[from+l] = newTour[to-l];
   }
 }
 
