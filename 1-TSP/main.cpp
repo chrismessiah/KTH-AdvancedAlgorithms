@@ -43,7 +43,7 @@ int main() {
 
   // we can print the distance matrix for debugging purposes. If kattis is true
   // this shows nothing.
-  // dMatrix.print();
+  dMatrix.print();
 
   vector<short> tour(inputLength);
 
