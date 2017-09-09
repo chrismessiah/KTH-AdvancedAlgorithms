@@ -35,10 +35,10 @@ void nGreedy(vector<short> &tour, Matrix dMatrix, int n) {
           } else {
             // In case the choices are filled
             removeThisPointValue = dMatrix.get(tour[i-1], nChoice[0]);
-            removeThisPointIndex = nChoice[0];
+            removeThisPointIndex = 0;
             for (int k = 1; k < nChoice.size(); k++) {
               if (removeThisPointValue > dMatrix.get(tour[i-1], nChoice[k])) {
-                removeThisPointIndex = nChoice[k]; // check this
+                removeThisPointIndex = k; // check this
                 removeThisPointValue = dMatrix.get(tour[i-1], nChoice[k]);
               }
             }
@@ -56,7 +56,7 @@ void nGreedy(vector<short> &tour, Matrix dMatrix, int n) {
       }
     }
     //srand(time(NULL));
-    cout << nChoice.size() << endl;
+    // cout << nChoice.size() << endl;
     int selected;
     if (nChoice.size() > 0) {
       selected = floor ( rand() % nChoice.size() );

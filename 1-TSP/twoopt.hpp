@@ -3,9 +3,9 @@
 
 void swap(vector<short> (*tour), int * i, int * k);
 
-void twoopt(vector<short> (*best_tour), Matrix& dMatrix) {
-  greedy(best_tour, dMatrix);
-  vector<short> tour = (*best_tour);
+void twoopt(vector<short> (*tour), Matrix& dMatrix) {
+  //create_random_tour(tour);
+  // greedy(tour, dMatrix);
 
   long best_distance, distance;
   while (true) {
