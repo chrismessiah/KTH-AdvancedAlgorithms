@@ -18,7 +18,7 @@
 
 using namespace std;
 
-bool kattis = false;
+bool kattis = true;
 short inputLength;
 float final_time_limit = 1.95; // sec
 default_random_engine rng;

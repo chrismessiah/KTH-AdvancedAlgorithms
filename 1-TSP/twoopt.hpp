@@ -7,8 +7,8 @@ void reverse(vector<short> (*tour), short from, short to);
 long get_path_cost(vector<short> (*tour), Matrix& dMatrix, short m, short n);
 
 void twoopt(vector<short> (*tour), Matrix& dMatrix) {
-  //greedy(tour, dMatrix);
-  create_random_tour(tour);
+  greedy(tour, dMatrix);
+  //create_random_tour(tour);
 
   // vector<short> tour = (*tour);
 
