@@ -18,7 +18,7 @@
 
 using namespace std;
 
-bool kattis = true;
+bool kattis = false;
 short inputLength;
 default_random_engine rng;
 chrono::high_resolution_clock::time_point startTime;
@@ -48,14 +48,16 @@ int main() {
 
   // create_random_tour(&tour);
   // print_tour_cost(&tour, dMatrix, "Random");
-  //
+
   // greedy(&tour, dMatrix);
   // print_tour_cost(&tour, dMatrix, "Greedy");
 
   twoopt(&tour, dMatrix);
-  //print_tour_cost(&tour, dMatrix, "2-Opt");
 
   // the kattis-tour outputter.
+  if (!kattis) {
+    print_tour_cost(&tour, dMatrix, "Final");
+  }
   print_tour(&tour);
 
   return 0;
