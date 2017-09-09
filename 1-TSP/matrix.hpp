@@ -35,8 +35,7 @@ void Matrix::set(short r, short c, long value) {
 }
 
 void Matrix::setSymmetrical(short r, short c, long value) {
-  array[length*r + c] = value;
-  array[length*c + r] = value;
+  array[length*r + c] = array[length*c + r] = value;
 }
 
 void Matrix::print() {
