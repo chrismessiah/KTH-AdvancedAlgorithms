@@ -2,7 +2,7 @@
 #define HELPERS
 
 void get_data(Matrix& dMatrix);
-long get_tour_cost(vector<short> (*tour), Matrix& dMatrix, bool printing);
+long get_tour_cost(vector<short> (*tour), Matrix& dMatrix);
 void create_random_tour(vector<short> (*tour));
 void create_tour(vector<short> (*tour));
 bool exit_time_reached();
@@ -29,14 +29,13 @@ void print_tour(vector<short> (*tour)) {
 
 void print_tour_cost(vector<short> (*tour), Matrix& dMatrix, string label) {
   if (kattis) {return;}
-  long cost = get_tour_cost(tour, dMatrix, true);
+  long cost = get_tour_cost(tour, dMatrix);
   cout << "Tour: " << label << "	Cost: " << cost << endl;
 }
 
-long get_tour_cost(vector<short> (*tour), Matrix& dMatrix, bool printing) {
+long get_tour_cost(vector<short> (*tour), Matrix& dMatrix) {
   long sum = 0;
   for (short i = 0; i < inputLength-1; i++) {
-    if (!printing && exit_time_reached()) {return 99999999;}
     sum += dMatrix.get((*tour)[i], (*tour)[i+1]);
   }
   sum += dMatrix.get((*tour)[inputLength-1], (*tour)[0]);
