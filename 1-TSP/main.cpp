@@ -29,6 +29,7 @@ chrono::high_resolution_clock::time_point startTime;
 #include "helpers.hpp"
 #include "greedy.hpp"
 #include "twoopt.hpp"
+#include "twopointfiveopt.hpp"
 
 int main() {
   startTime = chrono::high_resolution_clock::now();
@@ -40,20 +41,14 @@ int main() {
 
   Matrix dMatrix(inputLength);
   get_data(dMatrix); // convert inputs to distance matrix
-
-  // we can print the distance matrix for debugging purposes. If kattis is true
-  // this shows nothing.
-  dMatrix.print();
+  //dMatrix.print();
 
   vector<short> tour(inputLength);
 
   // create_random_tour(&tour);
-  // print_tour_cost(&tour, dMatrix, "Random");
-
-  // greedy(&tour, dMatrix);
-  // print_tour_cost(&tour, dMatrix, "Greedy");
-
+  greedy(&tour, dMatrix);
   twoopt(&tour, dMatrix);
+  twopointfiveopt(&tour, dMatrix);
 
   // the kattis-tour outputter.
   if (!kattis) {

@@ -7,15 +7,8 @@ void reverse(vector<short> (*tour), short from, short to);
 long get_path_cost(vector<short> (*tour), Matrix& dMatrix, short m, short n);
 
 void twoopt(vector<short> (*tour), Matrix& dMatrix) {
-  //create_random_tour(tour);
-  greedy(tour, dMatrix);
-
   long distance;
   long best_distance = get_tour_cost(tour, dMatrix);
-
-  if (!kattis) {
-    cout << "Cost before 2-OPT: " << best_distance << endl;
-  }
 
   bool improve = true;
   short vX_pre, vX, vY, vY_post;
