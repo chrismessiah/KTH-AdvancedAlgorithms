@@ -18,7 +18,7 @@
 
 using namespace std;
 
-bool kattis = true;
+bool kattis = false;
 short inputLength;
 float final_time_limit = 1.99; // sec. Kattis has 2 sec limit
 default_random_engine rng;
@@ -29,6 +29,7 @@ chrono::high_resolution_clock::time_point startTime;
 #include "helpers.hpp"
 #include "greedy.hpp"
 #include "twoopt.hpp"
+#include "christofides.hpp"
 
 int main() {
   startTime = chrono::high_resolution_clock::now();
@@ -36,7 +37,7 @@ int main() {
   rng = default_random_engine {};
 
   if (kattis) { cin >> inputLength; }
-  else { inputLength = get_test_input_length(); cout << endl << "DEBUG-MODE ACTIVE" << endl << endl;}
+  else { inputLength = get_test_input_length_2(); cout << endl << "DEBUG-MODE ACTIVE" << endl << endl;}
 
   Matrix dMatrix(inputLength);
   get_data(dMatrix); // convert inputs to distance matrix
@@ -53,13 +54,16 @@ int main() {
   // greedy(&tour, dMatrix);
   // print_tour_cost(&tour, dMatrix, "Greedy");
 
-  twoopt(&tour, dMatrix);
+  //twoopt(&tour, dMatrix);
+
+
+  christofides(&tour, dMatrix);
 
   // the kattis-tour outputter.
   if (!kattis) {
     print_tour_cost(&tour, dMatrix, "Final");
   }
-  print_tour(&tour);
+  //print_tour(&tour);
 
   return 0;
 }

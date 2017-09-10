@@ -1,11 +1,7 @@
 #ifndef INPUTS
 #define INPUTS
 
-short get_test_input_length();
 short get_test_input_length() { return 10; }
-
-void get_test_input(vector<double> * x, vector<double> * y);
-
 void get_test_input(vector<double> * x, vector<double> * y) {
   (*x)[0] = 95.0129;
   (*y)[0] = 61.5432;
@@ -36,6 +32,25 @@ void get_test_input(vector<double> * x, vector<double> * y) {
 
   (*x)[9] = 44.4703;
   (*y)[9] = 89.3650;
+}
+
+// used to verify minimal spanning tree
+short get_test_input_length_2() { return 5; }
+void get_test_input_2(vector<double> * x, vector<double> * y) {
+  (*x)[0] = 0;
+  (*y)[0] = 0;
+
+  (*x)[1] = 2;
+  (*y)[1] = 0;
+
+  (*x)[2] = 5;
+  (*y)[2] = 0;
+
+  (*x)[3] = 0;
+  (*y)[3] = 6;
+
+  (*x)[4] = 5;
+  (*y)[4] = 9;
 }
 
 #endif

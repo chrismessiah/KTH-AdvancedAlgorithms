@@ -12,7 +12,7 @@ void get_data(Matrix& dMatrix) {
   vector<double> x(inputLength);
   vector<double> y(inputLength);
   if (kattis) {for (short i = 0; i < inputLength; i++) { cin >> x[i] >> y[i];}}
-  else {get_test_input(&x, &y);}
+  else {get_test_input_2(&x, &y);}
 
   for (short i = 0; i < inputLength; i++) {
     for (short j = i+1; j < inputLength; j++) {
