@@ -7,11 +7,10 @@ void reverse(vector<short> (*tour), short from, short to);
 long get_path_cost(vector<short> (*tour), Matrix& dMatrix, short m, short n);
 
 void twoopt(vector<short> (*tour), Matrix& dMatrix) {
-  long distance;
-  long best_distance = get_tour_cost(tour, dMatrix);
-
+  long distance, best_distance = get_tour_cost(tour, dMatrix);
+  short v1, v2, v3, v4;
   bool improve = true;
-  short vX_pre, vX, vY, vY_post;
+  
   while (improve) {
     improve = false;
     if (exit_time_reached()) {return;}
@@ -20,13 +19,14 @@ void twoopt(vector<short> (*tour), Matrix& dMatrix) {
         if (exit_time_reached()) {return;}
 
         // the vertices relevant for the following comparison
-        vX_pre = (*tour)[((i-1) % inputLength)];
-        vX = (*tour)[i];
-        vY = (*tour)[k];
-        vY_post = (*tour)[((k+1) % inputLength)];
+        v1 = (*tour)[((i-1) % inputLength)];
+        v2 = (*tour)[i];
+        v3 = (*tour)[k];
+        v4 = (*tour)[((k+1) % inputLength)];
 
         // calculates the distance difference if two edges would be moved.
-        distance = dMatrix.get(vX_pre, vX) + dMatrix.get(vY, vY_post) - ( dMatrix.get(vX_pre, vY) + dMatrix.get(vX, vY_post)  );
+        // 1-2 & 3-4    ->    1-3 & 2-4   is shorter?
+        distance = dMatrix.get(v1, v2) + dMatrix.get(v3, v4) - ( dMatrix.get(v1, v3) + dMatrix.get(v2, v4)  );
 
         if (distance > 0) {
           improve = true;
