@@ -18,7 +18,7 @@
 
 using namespace std;
 
-bool kattis = true;
+bool kattis = false;
 short inputLength;
 float final_time_limit = 1.99; // sec. Kattis has 2 sec limit
 default_random_engine rng;
@@ -30,6 +30,7 @@ chrono::high_resolution_clock::time_point startTime;
 #include "greedy.hpp"
 #include "twoopt.hpp"
 #include "twopointfiveopt.hpp"
+#include "threeopt.hpp"
 
 int main() {
   startTime = chrono::high_resolution_clock::now();
@@ -48,7 +49,10 @@ int main() {
   // create_random_tour(&tour);
   greedy(&tour, dMatrix);
   twoopt(&tour, dMatrix);
-  twopointfiveopt(&tour, dMatrix);
+  //twopointfiveopt(&tour, dMatrix);
+  print_tour_cost(&tour, dMatrix, "BEFORE");
+  threeopt(&tour, dMatrix);
+  print_tour_cost(&tour, dMatrix, "AFTER");
 
   // the kattis-tour outputter.
   if (!kattis) {
