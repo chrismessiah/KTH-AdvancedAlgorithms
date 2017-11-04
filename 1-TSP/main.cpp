@@ -18,7 +18,7 @@
 
 using namespace std;
 
-bool kattis = false;
+bool kattis = true;
 short inputLength;
 float final_time_limit = 1.9999; // sec. Kattis has 2 sec limit
 default_random_engine rng;
@@ -54,11 +54,13 @@ int main() {
   // create_random_tour(&tour);
   // print_tour_cost(&tour, dMatrix, "Random");
 
-  nGreedy(tour, dMatrix, 5);
+  // nGreedy(tour, dMatrix, 3);
+  greedy(&tour, dMatrix);
   print_tour_cost(&tour, dMatrix, "Greedy");
 
 
   ne(tour, dMatrix);
+  print_tour_cost(&tour, dMatrix, "NE");
 
   // twoopt(&tour, dMatrix);
   // print_tour_cost(&tour, dMatrix, "2-Opt");
@@ -70,34 +72,40 @@ int main() {
 }
 
 void ne(vector<short> &tour, Matrix dMatrix) {
-  short numberOfGenomes = 10;
-  short numberOfGenerations = 10;
-  double mutateRate = 0.01;
+  short numberOfGenomes = 50;
+  short numberOfGenerations = 1300;
+  double mutationRate = 0.05;
   // Create the first generation
   vector<Genome> parents;
   Genome best = Genome(tour);
   best.updateTourLength(dMatrix);
+  best.fitness -= 1;
   Genome bestChildOfGeneration = best;
 
   // Create the first parents
   for (int i = 0; i < numberOfGenomes; i++) {
-    vector<short> DNA(inputLength);
-    create_random_tour(&DNA);
-    Genome parent = Genome(DNA);
+    // vector<short> DNA(inputLength);
+    // create_random_tour(&DNA);
+    Genome parent = Genome(tour);
     parent.updateTourLength(dMatrix);
     parents.push_back(parent);
   }
+  normalizeFitness(parents);
   // Run through the generations
   for (int i = 0; i < numberOfGenerations; i++) {
     vector<Genome> children;
     double bestFitness = 0;
     int bestFitnessIndex = 0;
+
     for (int j = 0; j < numberOfGenomes; j++) {
-      cout << "1" << endl;
-      Genome child = makeChild(bestChildOfGeneration, parents[j], mutateRate);
-      cout << "2" << endl;
+
+      short parent1 = selectChild(parents, -1);
+      short parent2 = selectChild(parents, parent1);
+      // Genome child = makeChild(bestChildOfGeneration, parents[j], mutationRate);
+      Genome child = makeChild(parents[parent1], parents[parent2], mutationRate);
       child.updateTourLength(dMatrix);
       children.push_back(child);
+      normalizeFitness(children);
       if (bestFitness < child.fitness) {
         bestFitness = child.fitness;
         bestFitnessIndex = j;
@@ -106,6 +114,7 @@ void ne(vector<short> &tour, Matrix dMatrix) {
     bestChildOfGeneration = children[bestFitnessIndex];
     if (best.fitness < bestChildOfGeneration.fitness) {
       best = bestChildOfGeneration;
+      cout << "bestFitness" << best.fitness << endl;
     }
     parents = children;
     children.clear();

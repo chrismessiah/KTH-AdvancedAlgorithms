@@ -23,7 +23,7 @@ class Genome {
     double fitness;
     double tourLength;
     Genome(vector<short> inputDNA);
-    Genome(short inputLength);
+    // Genome(short inputLength);
 
     // Functions
     void updateTourLength(Matrix& dMatrix);
@@ -32,12 +32,12 @@ class Genome {
     void swap(short &a, short &b);
 };
 
-Genome::Genome(short inputLength) {
-  vector<short> inputDNA(inputLength);
-  dnaLength = inputDNA.size();
-  DNA = inputDNA;
-  create_random_tour(&DNA);
-}
+// Genome::Genome(short inputLength) {
+//   vector<short> inputDNA(inputLength);
+//   dnaLength = inputDNA.size();
+//   DNA = inputDNA;
+//   create_random_tour(&DNA);
+// }
 
 Genome::Genome(vector<short> inputDNA) {
   dnaLength = inputDNA.size();
@@ -46,11 +46,11 @@ Genome::Genome(vector<short> inputDNA) {
 
 void Genome::updateTourLength(Matrix& dMatrix) {
   tourLength = get_tour_cost(&DNA, dMatrix);
-  fitness = 1 / tourLength;
+  updateFitness();
 }
 
 void Genome::updateFitness() {
-  fitness = 1 / tourLength;
+  fitness = 1 / tourLength + 1;
 }
 
 // Swaps points in the DNA
@@ -64,51 +64,96 @@ void Genome::mutate(double mutationRate) {
     }
   }
 }
-// End of the Genome functions
 
-// This is what we call a crossover
+// Genome makeChild(Genome parent1, Genome parent2, double mutationRate) {
+//   vector<short> childDNA;
+//   childDNA.insert(childDNA.begin(), parent1.DNA.begin(), parent1.DNA.end());
+//   Genome child = Genome(childDNA);
+//   child.mutate(mutationRate);
+//
+//   return child;
+// }
+
 Genome makeChild(Genome parent1, Genome parent2, double mutationRate) {
   short length = parent1.dnaLength;
-  vector<short> newDNA(length);
-  vector<short> tempDNA = parent2.DNA;
+  vector<short> parent1PartDNA;
+  vector<short> parent2PartDNA;
+  vector<short> newDNA;
   short start = rand() % length;   // DNA start from parent1
   short end = rand() % length;     // DNA end from parent 2
-  swap(start, end);
+  if (start > end)
+    std::swap(start, end);
 
-  // Adding the dna from one parent
-  for (int i = start; i < end; i++) {
-    newDNA[i] = parent1.DNA[i];
-    for (int j = 0; j < tempDNA.size(); j++) {
-      if (newDNA[i] == tempDNA[j]) {
-        tempDNA.erase(tempDNA.begin() + j);
-        j--;
+  vector<short> childDNA(length);
+  vector<short> parent1sub(end - start);
+  vector<short> parent2sub(length - (end - start));
+
+  // Getting all the DNA from parent1
+  for (int i = 0; i < parent1sub.size(); i++) {
+    parent1sub[i] = parent1.DNA[start + i];
+  }
+
+  // Getting the DNA from parent2 that is not in parent1
+  int p2idx = 0;
+  for (int i = 0; i < length; i++) {
+    bool exists = false;
+    for (int j = 0; j < parent1sub.size(); j++) {
+      if (parent2.DNA[i] == parent1sub[j]) {
+        exists = true;
       }
+    }
+    if (!exists) {
+      parent2sub[p2idx] = parent2.DNA[i];
+      p2idx++;
     }
   }
 
-  for (int i = 0; i < start; i++) {
-    newDNA[i] = tempDNA[0];
-    tempDNA.erase(tempDNA.begin());
+  p2idx = 0;
+  int p1idx = 0;
+  for (int i = 0; i < length; i++) {
+    if (i < start || i >= end) {
+      childDNA[i] = parent2sub[p2idx];
+      p2idx++;
+    } else {
+      childDNA[i] = parent1sub[p1idx];
+      p1idx++;
+    }
   }
 
-  for (int i = end; i < newDNA.size(); i++){
-    newDNA[i] = tempDNA[0];
-    tempDNA.erase(tempDNA.begin());
-  }
-
-  Genome child = Genome(newDNA);
+  Genome child = Genome(childDNA);
   child.mutate(mutationRate);
 
   return child;
 }
+// End of the Genome functions
 
-void swap(short &a, short &b) {
-  short temp;
-  if (a > b) {
-    temp = a;
+double totalFitness(vector<Genome> genomes) {
+  double sum = 0;
+  for (int i = 0; i < genomes.size(); i++) {
+    sum += genomes[i].fitness;
   }
-  a = b;
-  b = temp;
+  return sum;
+}
+
+void normalizeFitness(vector<Genome> &genomes) {
+  double totFitness = totalFitness(genomes);
+  for (int i = 0; i < genomes.size(); i++) {
+    genomes[i].fitness /= totFitness;
+  }
+}
+
+short selectChild(vector<Genome> genomes, short selected) {
+  double r = ((double) rand() / (RAND_MAX));
+  double probSum = 0;
+  for (int i = 0; i < genomes.size(); i++) {
+    probSum += genomes[i].fitness;
+    if (probSum < r) {
+      // if (selected != i) {
+      return i;
+      // }
+    }
+  }
+  return genomes.size() - 1;
 }
 
 #endif
