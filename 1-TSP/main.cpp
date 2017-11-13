@@ -51,11 +51,11 @@ int main() {
 
   vector<short> tour(inputLength);
 
-  // create_random_tour(&tour);
+  create_random_tour(&tour);
   // print_tour_cost(&tour, dMatrix, "Random");
 
   // nGreedy(tour, dMatrix, 3);
-  greedy(&tour, dMatrix);
+  //greedy(&tour, dMatrix);
   print_tour_cost(&tour, dMatrix, "Greedy");
 
 
@@ -73,8 +73,8 @@ int main() {
 
 void ne(vector<short> &tour, Matrix dMatrix) {
   short numberOfGenomes = 50;
-  short numberOfGenerations = 1300;
-  double mutationRate = 0.05;
+  short numberOfGenerations = 110;
+  double mutationRate = 0.1;
   // Create the first generation
   vector<Genome> parents;
   Genome best = Genome(tour);
@@ -114,7 +114,7 @@ void ne(vector<short> &tour, Matrix dMatrix) {
     bestChildOfGeneration = children[bestFitnessIndex];
     if (best.fitness < bestChildOfGeneration.fitness) {
       best = bestChildOfGeneration;
-      cout << "bestFitness" << best.fitness << endl;
+      //cout << "bestFitness" << best.fitness << endl;
     }
     parents = children;
     children.clear();
