@@ -7,7 +7,7 @@ This repo contains my implemented solutions for the labs in the course DD2440 Ad
 
 ### Score preview
 
-![Factoring Kattis Score](docs/kattis-factoring.jpeg.jpeg)
+![Factoring Kattis Score](docs/kattis-factoring.jpeg)
 
 ---
 
