@@ -9,6 +9,4 @@ This repo contains my implemented solutions for the labs in the course DD2440 Ad
 
 ![Factoring Kattis Score](docs/kattis-factoring.jpg)
 
----
-
 ![TSP Kattis Score](docs/kattis-tsp.jpg)
