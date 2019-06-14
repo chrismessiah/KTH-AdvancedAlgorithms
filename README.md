@@ -5,5 +5,10 @@ This repo contains my implemented solutions for the labs in the course DD2440 Ad
 1. Traveling Salesman Problem
 2. Prime Number Factorization
 
+### Score preview
 
+![Factoring Kattis Score](docs/kattis-factoring.jpeg.jpeg)
 
+---
+
+![TSP Kattis Score](docs/kattis-tsp.jpeg)
